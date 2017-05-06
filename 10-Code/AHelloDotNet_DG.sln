@@ -3,11 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QX_Frame.Helper_DG_NETFramework461", "QX_Frame.Helper_DG_NETFramework461\QX_Frame.Helper_DG_NETFramework461.csproj", "{D2E5D39C-9457-4BCE-8869-9FF2B49EDE62}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QX_Frame.Helper_DG.NETFramework461", "QX_Frame.Helper_DG_NETFramework461\QX_Frame.Helper_DG.NETFramework461.csproj", "{D2E5D39C-9457-4BCE-8869-9FF2B49EDE62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QX_Frame.Helper_DG_NETFramework45", "QX_Frame.Helper_DG_NETFramework45\QX_Frame.Helper_DG_NETFramework45.csproj", "{160D5850-5485-42C9-997B-F0DC860BA9AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QX_Frame.Helper_DG.NETFramework45", "QX_Frame.Helper_DG_NETFramework45\QX_Frame.Helper_DG.NETFramework45.csproj", "{160D5850-5485-42C9-997B-F0DC860BA9AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QX_Frame.Helper_DG_NETStandard14", "QX_Frame.Helper_DG_NETStandard14\QX_Frame.Helper_DG_NETStandard14.csproj", "{BD003CFC-91A4-4266-94E5-110955CAAC77}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QX_Frame.Helper_DG.NETStandard14", "QX_Frame.Helper_DG_NETStandard14\QX_Frame.Helper_DG.NETStandard14.csproj", "{BD003CFC-91A4-4266-94E5-110955CAAC77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OWIN.WebApi.Srv.NETFramework461", "OWIN.WebApi.Srv.NETFramework461\OWIN.WebApi.Srv.NETFramework461.csproj", "{53D2B4C5-5DB0-40EA-B5C2-77F1FFC727CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OWIN.WebApi.NETFramework461", "OWIN.WebApi.NETFramework461\OWIN.WebApi.NETFramework461.csproj", "{16C96484-3B40-43FB-B30C-21E8A6AB4FBC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +31,14 @@ Global
 		{BD003CFC-91A4-4266-94E5-110955CAAC77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD003CFC-91A4-4266-94E5-110955CAAC77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD003CFC-91A4-4266-94E5-110955CAAC77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53D2B4C5-5DB0-40EA-B5C2-77F1FFC727CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53D2B4C5-5DB0-40EA-B5C2-77F1FFC727CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53D2B4C5-5DB0-40EA-B5C2-77F1FFC727CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53D2B4C5-5DB0-40EA-B5C2-77F1FFC727CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16C96484-3B40-43FB-B30C-21E8A6AB4FBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16C96484-3B40-43FB-B30C-21E8A6AB4FBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16C96484-3B40-43FB-B30C-21E8A6AB4FBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16C96484-3B40-43FB-B30C-21E8A6AB4FBC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
