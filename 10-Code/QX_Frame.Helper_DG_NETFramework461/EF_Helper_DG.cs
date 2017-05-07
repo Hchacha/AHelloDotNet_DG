@@ -3,9 +3,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Data.Entity;
-using System.Runtime.Remoting.Messaging;
 using System.Transactions;
-using System.Web;
 
 namespace QX_Frame.Helper_DG
 {
@@ -55,12 +53,12 @@ namespace QX_Frame.Helper_DG
             //}
 
             //method 2 :
-            Db dbContext = HttpContext.Current.Items["dbContext"] as Db;
+            Db dbContext = Cache_Helper_DG.Cache_Get("dbContext") as Db;
             if (dbContext == null)
             {
                 //create a dbContext to memory if dbContext has not exist
                 dbContext = System.Activator.CreateInstance<Db>();
-                HttpContext.Current.Items["dbContext"] = dbContext;
+                Cache_Helper_DG.Cache_Add("dbContext",dbContext);
             }
             return dbContext;
         }

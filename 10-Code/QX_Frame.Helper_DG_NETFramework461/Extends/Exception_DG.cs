@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace QX_Frame.Helper_DG
+namespace QX_Frame.Helper_DG.Extends
 {
     /**
      * author:qixiao

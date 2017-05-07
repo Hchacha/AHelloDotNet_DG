@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QX_Frame.Helper_DG.Extends;
+using System;
 using System.IO;
 
 namespace QX_Frame.Helper_DG

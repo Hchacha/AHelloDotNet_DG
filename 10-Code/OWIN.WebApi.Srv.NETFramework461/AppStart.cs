@@ -50,7 +50,7 @@ namespace OWIN.WebApi.Srv
                 defaults: new { id = RouteParameter.Optional },
                 namespaces: new string[] { "OWIN.WebApi" }
             );
-            config.Services.Replace(typeof(IHttpControllerSelector), new OWIN.WebApi.WebApiControllerSelector(config));
+            config.Services.Replace(typeof(IHttpControllerSelector), new OWIN.WebApi.config.WebApiControllerSelector(config));
 
             //if config the global filter input there need not write the attributes
             //config.Filters.Add(new App.Web.Filters.ExceptionAttribute_DG());

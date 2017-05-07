@@ -4,8 +4,9 @@ using System.Configuration;
 namespace QX_Frame.Helper_DG
 {
     /*2016-11-12 20:40:50 author:qixiao*/
-    public abstract class Config_Helper_DG 
+    public abstract class Config_Helper_DG
     {
+        #region AppSetting
         public static string AppSetting_Get(string appSettingKey)
         {
             Configuration configuration = null;
@@ -46,5 +47,18 @@ namespace QX_Frame.Helper_DG
             ConfigurationManager.RefreshSection("appSettings");     //must refresh
             return true;
         }
+        #endregion
+
+        #region ConnectionString
+        /// <summary>
+        /// Get ConnectionString By Key
+        /// </summary>
+        /// <param name="key">Key</param>
+        /// <returns></returns>
+        public static string ConnectionString_Get(string key)
+        {
+            return ConfigurationManager.ConnectionStrings[key].ConnectionString;
+        }
+        #endregion
     }
 }

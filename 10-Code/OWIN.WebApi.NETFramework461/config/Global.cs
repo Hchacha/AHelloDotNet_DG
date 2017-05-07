@@ -8,7 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http.Controllers;
 
-namespace OWIN.WebApi
+namespace OWIN.WebApi.config
 {
     public class WebApiApplication : System.Web.HttpApplication
     {
