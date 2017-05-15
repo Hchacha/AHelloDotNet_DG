@@ -1,4 +1,5 @@
 ﻿using QX_Frame.Helper_DG.Extends;
+using QX_Frame.Helper_DG.Config;
 using System;
 using System.IO;
 
@@ -11,89 +12,26 @@ namespace QX_Frame.Helper_DG
     {
         public static void Log(string logText, string logTitle = "QX_Frame General", Boolean isAppend = true)
         {
-            try
-            {
-                string LogLocation_DG = @"Log_QX_Frame/Log_QX_Frame_General/";
-                try
-                {
-                    LogLocation_DG = Config_Helper_DG.AppSetting_Get("Log_Location_General_DG");
-                }
-                catch (Exception)
-                {
-                    LogLocation_DG = @"Log_QX_Frame/Log_QX_Frame_General/";
-                }
-                if (!Directory.Exists(LogLocation_DG))
-                {
-                    Directory.CreateDirectory(LogLocation_DG);
-                }
-                using (StreamWriter log = new StreamWriter($"{LogLocation_DG}Log_{DateTime.Now.ToDateString()}.Log", isAppend))
-                {
-                    log.WriteLine();
-                    log.WriteLine($"{DateTime_Helper_DG.Get_DateTime_Now_24HourType()}   ---- {logTitle} Log !------");
-                    log.WriteLine(logText);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            OutPutStreamWriter(QX_Frame_Helper_DG_Config.Log_Location_Use, logTitle, logText, isAppend);
         }
         public static void Log_Error(string logText, string logTitle = "QX_Frame Error", Boolean isAppend = true)
         {
-            try
-            {
-                string LogLocation_DG = @"Log_QX_Frame/Log_QX_Frame_Error/";
-                try
-                {
-                    LogLocation_DG = Config_Helper_DG.AppSetting_Get("Log_Location_Error_DG");
-                }
-                catch (Exception)
-                {
-                    LogLocation_DG = @"Log_QX_Frame/Log_QX_Frame_Error/";
-                }
-                if (!Directory.Exists(LogLocation_DG))
-                {
-                    Directory.CreateDirectory(LogLocation_DG);
-                }
-                using (StreamWriter log = new StreamWriter($"{LogLocation_DG}Log_{DateTime.Now.ToDateString()}.Log", isAppend))
-                {
-                    log.WriteLine();
-                    log.WriteLine($"{DateTime_Helper_DG.Get_DateTime_Now_24HourType()}   ---- {logTitle} Log !------");
-                    log.WriteLine(logText);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            OutPutStreamWriter(QX_Frame_Helper_DG_Config.Log_Location_Use, logTitle, logText, isAppend);
         }
         public static void Log_Use(string logText, string logTitle = "QX_Frame USE", Boolean isAppend = true)
         {
-            try
+            OutPutStreamWriter(QX_Frame_Helper_DG_Config.Log_Location_Use, logTitle, logText, isAppend);
+        }
+
+        //Out Put Method
+        private static void OutPutStreamWriter(string logLocation,string logTitle,string logText,bool isAppend=true)
+        {
+            IO_Helper_DG.CreateDirectoryIfNotExist(logLocation);
+            using (StreamWriter log = new StreamWriter($"{logLocation}Log_{DateTime.Now.ToDateString()}.Log", isAppend))
             {
-                string LogLocation_DG = @"Log_QX_Frame/Log_QX_Frame_Use/";
-                try
-                {
-                    LogLocation_DG = Config_Helper_DG.AppSetting_Get("Log_Location_Use_DG");
-                }
-                catch (Exception)
-                {
-                    LogLocation_DG = @"Log_QX_Frame/Log_QX_Frame_Use/";
-                }
-                if (!Directory.Exists(LogLocation_DG))
-                {
-                    Directory.CreateDirectory(LogLocation_DG);
-                }
-                using (StreamWriter log = new StreamWriter($"{LogLocation_DG}Log_{DateTime.Now.ToDateString()}.Log", isAppend))
-                {
-                    log.WriteLine();
-                    log.WriteLine($"{DateTime_Helper_DG.Get_DateTime_Now_24HourType()}   ---- {logTitle} Log !------");
-                    log.WriteLine(logText);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                log.WriteLine();
+                log.WriteLine($"{DateTime_Helper_DG.Get_DateTime_Now_24HourType()}   ---- {logTitle} Log !------");
+                log.WriteLine(logText);
             }
         }
     }

@@ -1,21 +1,13 @@
-﻿namespace QX_Frame.Helper_DG
+﻿
+/**
+ * author:qixiao
+ * create:2016-11-3 11:50:08
+ * update:2017-5-15 15:41:16
+ * */
+namespace QX_Frame.Helper_DG
 {
-    /*2016-11-3 11:50:08 author:qixiao*/
     public abstract class Convert_Helper_DG 
     {
-        //public static T Json_TO_T<T>(string json)
-        //{
-        //    try
-        //    {
-        //        return new JavaScriptSerializer().Deserialize<T>(json);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Log_Helper_DG.Log_Error(ex.ToString(), "Json Convert Error ");
-        //        return default(T);
-        //    }
-        //}
-
         /// <summary>
         /// Json_To_T
         /// </summary>

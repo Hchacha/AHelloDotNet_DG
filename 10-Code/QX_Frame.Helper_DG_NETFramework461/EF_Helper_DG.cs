@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Data.Entity;
 using System.Transactions;
+using QX_Frame.Helper_DG.Config;
 
 namespace QX_Frame.Helper_DG
 {
@@ -42,7 +43,7 @@ namespace QX_Frame.Helper_DG
         #region get current dbContext
         public static DbContext GetCurrentDbContext()
         {
-            //method 1 : CallContext
+            //method 1 : CallContext 该方法有有时候第一次访问不到的bug
             //CallContext：是线程内部唯一的独用的数据槽（一块内存空间）  
             //Db dbContext = CallContext.GetData("DbContext") as Db;
             //if (dbContext == null)  //线程在内存中没有此上下文  
@@ -66,41 +67,12 @@ namespace QX_Frame.Helper_DG
 
         #region Cache Strategy
 
-        //read configuration
-        //configuration if need cache
-        private static bool IsCache
-        {
-            get
-            {
-                try
-                {
-                    return Convert.ToInt32(Config_Helper_DG.AppSetting_Get("IsCache")) == 1 ? true : false;
-                }
-                catch { return false; }
-            }
-        }
-        //configuration the cache expiration time unit by minutes
-        private static int CacheExpirationTime_Minutes
-        {
-            get
-            {
-                try
-                {
-                    return Convert.ToInt32(Config_Helper_DG.AppSetting_Get("CacheExpirationTime_Minutes"));
-                }
-                catch
-                {
-                    return 10;
-                }
-            }
-        }
-
         /// <summary>
         /// edit data cache must update
         /// </summary>
         public static void CacheChanges<T>()
         {
-            if (IsCache)
+            if (QX_Frame_Helper_DG_Config.Cache_IsCache)
             {
                 Cache_Helper_DG.Cache_Delete(nameof(T));
             }
@@ -113,14 +85,14 @@ namespace QX_Frame.Helper_DG
         /// <returns></returns>
         public static IQueryable<T> GetIQuerybleByCache<T>() where T : class
         {
-            if (IsCache)
+            if (QX_Frame_Helper_DG_Config.Cache_IsCache)
             {
                 IQueryable<T> iqueryable = Cache_Helper_DG.Cache_Get(nameof(T)) as IQueryable<T>;
                 if (iqueryable == null)
                 {
                     DbContext db = GetCurrentDbContext();
                     iqueryable = db.Set<T>().AsExpandable();
-                    Cache_Helper_DG.Cache_Add(nameof(T), iqueryable, null, DateTime.Now.AddMinutes(CacheExpirationTime_Minutes), TimeSpan.Zero);
+                    Cache_Helper_DG.Cache_Add(nameof(T), iqueryable, null, DateTime.Now.AddMinutes(QX_Frame_Helper_DG_Config.Cache_CacheExpirationTime_Minutes), TimeSpan.Zero);
                 }
                 return iqueryable;
             }

@@ -32,6 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -47,6 +48,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="config\qx_frame.config.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\QX_Frame.Helper_DG_NETFramework461\QX_Frame.Helper_DG.NETFramework461.csproj">
+      <Project>{d2e5d39c-9457-4bce-8869-9ff2b49ede62}</Project>
+      <Name>QX_Frame.Helper_DG.NETFramework461</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

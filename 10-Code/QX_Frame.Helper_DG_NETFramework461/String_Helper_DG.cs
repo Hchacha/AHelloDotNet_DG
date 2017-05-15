@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Text;
 
+/**
+ * author:qixiao
+ * create:2016-11-2 15:13:28
+ * update:2017-5-15 15:05:34
+ * */
 namespace QX_Frame.Helper_DG
 {
-    /*2016-11-2 15:13:28 author:qixiao*/
     public abstract class String_Helper_DG
     {
         /// <summary>
@@ -11,7 +15,7 @@ namespace QX_Frame.Helper_DG
         /// </summary>
         /// <param name="length">string length</param>
         /// <returns></returns>
-        public static string Get_RandomString(int length)
+        public static string GetRandomString(int length)
         {
             string str = string.Empty;
             long num2 = DateTime.Now.Ticks;
@@ -34,12 +38,12 @@ namespace QX_Frame.Helper_DG
         }
 
         /// <summary>
-        /// get_String_By_Stream
+        /// get String By Stream
         /// </summary>
         /// <param name="inputStream">inputStream</param>
         /// <param name="encoding">encoding="UTF-8"</param>
         /// <returns></returns>
-        public static string get_String_By_Stream(System.IO.Stream inputStream, string encoding = "UTF-8")
+        public static string GetStringByStream(System.IO.Stream inputStream, string encoding = "UTF-8")
         {
             int count = 0;
             int byteRead = 0;
@@ -54,13 +58,13 @@ namespace QX_Frame.Helper_DG
         }
 
         /// <summary>
-        /// get_String_By_Stream
+        /// Get String By Stream
         /// </summary>
         /// <param name="inputStream">inputStream</param>
         /// <param name="count">out count has read</param>
         /// <param name="encoding">encoding="UTF-8"</param>
         /// <returns></returns>
-        public static string get_String_By_Stream(System.IO.Stream inputStream, out int count, string encoding = "UTF-8")
+        public static string GetStringByStream(System.IO.Stream inputStream, out int count, string encoding = "UTF-8")
         {
             count = 0;
             int byteRead = 0;

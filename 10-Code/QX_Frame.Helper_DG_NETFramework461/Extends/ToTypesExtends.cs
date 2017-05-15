@@ -8,54 +8,36 @@ namespace QX_Frame.Helper_DG.Extends
      **/
     public static class ToTypesExtends
     {
-        #region Convert to T from String
-        
-        public static Int32 ToInt(this string str)
-        {
-            return Convert.ToInt32(str);    //default int32
-        }
-        public static Int16 ToInt16(this string str)
-        {
-            return Convert.ToInt16(str);
-        }
-        public static Int32 ToInt32(this string str)
-        {
-            return Convert.ToInt32(str);
-        }
-        public static Int64 ToInt64(this string str)
-        {
-            return Convert.ToInt64(str);
-        }
-        public static DateTime ToDateTime(this string str)
-        {
-            return Convert.ToDateTime(str);
-        }
+        #region Convert to aim type from object
 
-        #endregion
-
-        #region Convert to T from object
-
-        public static Int32 ToInt(this object obj)
-        {
-            return Convert.ToInt32(obj);    //default int32
-        }
-        public static Int16 ToInt16(this object obj)
+        public static Int16 ToShort(this object obj)
         {
             return Convert.ToInt16(obj);
         }
-        public static Int32 ToInt32(this object obj)
+        public static Int32 ToInt(this object obj)
         {
             return Convert.ToInt32(obj);
         }
-        public static Int64 ToInt64(this object obj)
+        public static Int64 ToLong(this object obj)
         {
             return Convert.ToInt64(obj);
+        }
+        public static double ToDouble(this object obj)
+        {
+            return Convert.ToDouble(obj);
+        }
+        public static decimal ToDecimal(this object obj)
+        {
+            return Convert.ToDecimal(obj);
         }
         public static DateTime ToDateTime(this object obj)
         {
             return Convert.ToDateTime(obj);
         }
-
+        public static string ToJson(this object obj)
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(obj);
+        }
         #endregion
 
         #region Convert to string from DateTime

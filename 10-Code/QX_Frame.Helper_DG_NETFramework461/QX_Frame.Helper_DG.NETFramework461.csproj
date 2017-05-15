@@ -72,14 +72,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache_Helper_DG.cs" />
-    <Compile Include="Config_Helper_DG.cs" />
+    <Compile Include="Config\QX_Frame_Helper_DG_Config.cs" />
     <Compile Include="Convert_Helper_DG.cs" />
     <Compile Include="DateTime_Helper_DG.cs" />
     <Compile Include="EF_Helper_DG.cs" />
     <Compile Include="Encrypt_Helper_DG.cs" />
     <Compile Include="Extends\Exception_DG.cs" />
     <Compile Include="Extends\ToTypesExtends.cs" />
-    <Compile Include="Ini_Helper_DG.cs" />
+    <Compile Include="File_Helper_DG.cs" />
     <Compile Include="IO_Helper_DG.cs" />
     <Compile Include="Ip_Helper_DG.cs" />
     <Compile Include="ListPaging_Helper_DG.cs" />
@@ -93,8 +93,8 @@
     <Compile Include="Sql_Helper_DG.cs" />
     <Compile Include="Sql_Helper_MS.cs" />
     <Compile Include="String_Helper_DG.cs" />
+    <Compile Include="Task_Helper_DG.cs" />
     <Compile Include="Transaction_Helper_DG.cs" />
-    <Compile Include="Txt_Helper_DG.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="options\" />

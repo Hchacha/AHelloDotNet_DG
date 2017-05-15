@@ -21,14 +21,16 @@ namespace QX_Frame.Helper_DG
         /// <summary>
         /// 连接字符串 ConnString 公共静态只读 不允许进行修改 在后续调用中目前不支持代码修改链接字符串
         /// </summary>
-        public static readonly string ConnString = ConfigurationManager.ConnectionStrings["QX_Frame_Default"].ConnectionString;
-        /// <summary>
-        /// Get ConnString By Connection Name
-        /// </summary>
-        /// <param name="connName"></param>
-        /// <returns></returns>
-        public static string ConnString_GetByName(string connName) => ConfigurationManager.ConnectionStrings[connName].ConnectionString;
+        public static readonly string ConnString = QX_Frame.Helper_DG.Config.QX_Frame_Helper_DG_Config.DB_QX_Frame_Default;
         #endregion
+
+        static Sql_Helper_DG()
+        {
+            if (string.IsNullOrEmpty(ConnString))
+            {
+                throw new ArgumentNullException("ConnString Can Not Be Null !");
+            }
+        }
 
         #region ExcuteNonQuery 执行sql语句或者存储过程,返回影响的行数---ExcuteNonQuery
         /// <summary>

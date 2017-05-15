@@ -5,15 +5,15 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
+/**
+ * author:qixiao
+ * 2017-4-5 15:26:53
+ * */
 namespace QX_Frame.Helper_DG
 {
-    /**
-     * author:qixiao
-     * 2017-4-5 15:26:53
-     * */
-   public class Mail_Helper_DG
+    public class Mail_Helper_DG
     {
-        public static bool SendBySMTP(string account,string password, string[] toMailAddress, string[] ccMailAddress, string fromMailAddress,string fromMailName,string mailSubject,string mailBody,bool isBodyHtml,string smtpHost= "smtp.163.com", int smtpPort=25, MailPriority mailPriority=MailPriority.Normal)
+        public static bool SendBySMTP(string account, string password, string[] toMailAddress, string[] ccMailAddress, string fromMailAddress, string fromMailName, string mailSubject, string mailBody, bool isBodyHtml, string smtpHost = "smtp.163.com", int smtpPort = 25, MailPriority mailPriority = MailPriority.Normal)
         {
             System.Net.Mail.MailMessage msg = new System.Net.Mail.MailMessage();
             //可以发送给多人
