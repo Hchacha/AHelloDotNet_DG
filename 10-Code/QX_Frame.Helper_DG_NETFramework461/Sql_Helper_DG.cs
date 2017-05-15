@@ -21,7 +21,7 @@ namespace QX_Frame.Helper_DG
         /// <summary>
         /// 连接字符串 ConnString 公共静态只读 不允许进行修改 在后续调用中目前不支持代码修改链接字符串
         /// </summary>
-        public static readonly string ConnString = QX_Frame.Helper_DG.Config.QX_Frame_Helper_DG_Config.DB_QX_Frame_Default;
+        public static readonly string ConnString = QX_Frame.Helper_DG.Configs.QX_Frame_Helper_DG_Config.ConnectionString_DB_QX_Frame_Default;
         #endregion
 
         static Sql_Helper_DG()

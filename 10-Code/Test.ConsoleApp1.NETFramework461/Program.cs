@@ -12,8 +12,9 @@ namespace Test.ConsoleApp1.NETFramework461
     {
         static void Main(string[] args)
         {
-            string data = File_Helper_DG.Json_GetJObjectFromJsonFile("123.json")["data"][1]["loginId"].ToString();
-            Console.WriteLine(data);
+            int a = 1;
+            Console.WriteLine(a==1);
+            Console.WriteLine(a==2);
 
 
             Console.WriteLine("any key to exit ...");

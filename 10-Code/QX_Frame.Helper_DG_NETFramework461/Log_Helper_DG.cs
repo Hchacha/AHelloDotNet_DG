@@ -1,5 +1,5 @@
 ﻿using QX_Frame.Helper_DG.Extends;
-using QX_Frame.Helper_DG.Config;
+using QX_Frame.Helper_DG.Configs;
 using System;
 using System.IO;
 
