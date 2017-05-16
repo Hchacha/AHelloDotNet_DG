@@ -48,7 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="config\qx_frame.config.json" />
+    <None Include="Config\qx_frame.config.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\QX_Frame.Helper_DG_NETFramework461\QX_Frame.Helper_DG.NETFramework461.csproj">

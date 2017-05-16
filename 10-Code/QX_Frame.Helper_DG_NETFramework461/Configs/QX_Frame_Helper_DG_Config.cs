@@ -30,5 +30,14 @@ namespace QX_Frame.Helper_DG.Configs
         public static int Cache_CacheExpirationTime_Minutes { get; set; } = 10;
 
         #endregion
+
+        #region Internationalization config
+
+        public static string International_ConfigFileLocation { get; set; }
+        public static string International_Language { get; set; } = "english";
+
+        #endregion
+
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using QX_Frame.Helper_DG.Extends;
 using System;
 using System.Configuration;
 using System.IO;
@@ -244,7 +245,22 @@ namespace QX_Frame.Helper_DG
         /// <returns></returns>
         public static JObject Json_GetJObjectFromJsonFile(string filePath)
         {
-            return (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(ReadFileStringContent(filePath));
+            JObject jObject = new JObject();
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException("the file not found in the filePath");
+            }
+            object jobjectInCache = Cache_Helper_DG.Cache_Get(filePath);
+            if (jobjectInCache!=null)
+            {
+                 jObject=(JObject)jobjectInCache;
+            }
+            else
+            {
+                jObject= (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(ReadFileStringContent(filePath));
+                Cache_Helper_DG.Cache_Add(filePath,jObject);
+            }
+            return jObject;
         }
 
         #endregion

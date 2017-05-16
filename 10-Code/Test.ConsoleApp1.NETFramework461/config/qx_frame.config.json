@@ -1,4 +1,4 @@
-{
+﻿{
   "schema": "qx_frame.config.json",
   "description": "configuration file about qx_frame app start",
   "database": {
@@ -13,12 +13,12 @@
     "Log_Location_Use": "Log_QX_Frame/Log_QX_Frame_Use/"
   },
   "cache": {
-    "IsCache":1,
-    "CacheExpirationTime_Minutes":10
+    "IsCache": 1,
+    "CacheExpirationTime_Minutes": 10
   },
-  "authentication":{
-    "Auth_Token_expireTime_days":0,
-    "Auth_Token_expireTime_hours":0,
-    "Auth_Token_expireTime_minutes":30
+  "authentication": {
+    "Auth_Token_expireTime_days": 0,
+    "Auth_Token_expireTime_hours": 0,
+    "Auth_Token_expireTime_minutes": 30
   }
 }
