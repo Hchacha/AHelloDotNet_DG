@@ -96,6 +96,7 @@
     <Compile Include="String_Helper_DG.cs" />
     <Compile Include="Task_Helper_DG.cs" />
     <Compile Include="Transaction_Helper_DG.cs" />
+    <Compile Include="TypeConvert_Helper_DG.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Options\" />
