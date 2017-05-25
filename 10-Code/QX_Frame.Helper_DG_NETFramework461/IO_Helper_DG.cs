@@ -7,9 +7,9 @@ namespace QX_Frame.Helper_DG
     //time:2017-1-6 17:11:40
     public abstract class IO_Helper_DG
     {
-        public static bool CopyFile(string sourceFilePath,string newFilePath,bool allowCoverSameNameFiles=true)
+        public static bool CopyFile(string sourceFilePath, string newFilePath, bool allowCoverSameNameFiles = true)
         {
-            File.Copy(sourceFilePath,newFilePath, allowCoverSameNameFiles);//允许覆盖同名文件
+            File.Copy(sourceFilePath, newFilePath, allowCoverSameNameFiles);//允许覆盖同名文件
             return true;
         }
         //create Directory
@@ -25,6 +25,16 @@ namespace QX_Frame.Helper_DG
         public static string DeskTopPath
         {
             get { return Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory); }
+        }
+
+        public static string RootPath_Wcf
+        {
+            get { return System.Web.Hosting.HostingEnvironment.MapPath("~"); }
+        }
+
+        public static string RootPath_MVC
+        {
+            get { return System.Web.HttpContext.Current.Server.MapPath("~"); }
         }
 
         public static void OpenDirectory(string directoryPath)

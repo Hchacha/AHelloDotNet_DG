@@ -12,11 +12,15 @@ namespace QX_Frame.Helper_DG
     {
         public static Task TaskRun(Action action)
         {
-           return Task.Run(action);
+            return Task.Run(action);
         }
         public static void ThreadRun(Action action)
         {
             new Thread(() => { action(); }).Start();
+        }
+        public static void ThreadPoolRun(Action action)
+        {
+            ThreadPool.QueueUserWorkItem(obj => { action(); });
         }
     }
 }
