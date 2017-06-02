@@ -3,10 +3,15 @@ using System.Collections;
 using System.Web;
 using System.Web.Caching;
 
+/*
+ * author:qixiao
+ * create:2016-11-12 22:58:25 
+ * update:2017-6-2 15:23:35
+ */
 namespace QX_Frame.Helper_DG
 {
-    /*2016-11-12 22:58:25 author:qixiao*/
-    public abstract class Cache_Helper_DG 
+
+    public abstract class Cache_Helper_DG
     {
         /// <summary>
         /// Cache_Get
@@ -16,6 +21,38 @@ namespace QX_Frame.Helper_DG
         public static object Cache_Get(string cacheKey)
         {
             return HttpRuntime.Cache[cacheKey];
+        }
+
+        #region Cache Add
+
+        /// <summary>
+        /// Cache_Add
+        /// </summary>
+        /// <param name="cacheKey">key</param>
+        /// <param name="cacheValue">object value</param>
+        /// <param name="keepMinutes"></param>
+        /// <param name="dependencies">缓存的依赖项，也就是此项的更改意味着缓存内容已经过期。如果没有依赖项，可将此值设置为NULL。</param>
+        /// <param name="cacheItemRemovedCallback">表示缓存删除数据对象时调用的事件，一般用做通知程序。</param>
+        /// <returns></returns>
+        public static Boolean Cache_Add(string cacheKey, object cacheValue, int keepMinutes = 10, CacheDependency dependencies = null, CacheItemRemovedCallback cacheItemRemovedCallback = null)
+        {
+            HttpRuntime.Cache.Insert(cacheKey, cacheValue, dependencies, Cache.NoAbsoluteExpiration, TimeSpan.FromMinutes(keepMinutes), CacheItemPriority.NotRemovable, cacheItemRemovedCallback);
+            return true;
+        }
+
+        /// <summary>
+        /// Cache_Add
+        /// </summary>
+        /// <param name="cacheKey">key</param>
+        /// <param name="cacheValue">object value</param>
+        /// <param name="keepMinutes"></param>
+        /// <param name="dependencies">缓存的依赖项，也就是此项的更改意味着缓存内容已经过期。如果没有依赖项，可将此值设置为NULL。</param>
+        /// <param name="cacheItemRemovedCallback">表示缓存删除数据对象时调用的事件，一般用做通知程序。</param>
+        /// <returns></returns>
+        public static Boolean Cache_Add(string cacheKey, object cacheValue, DateTime expireTime, CacheDependency dependencies = null, CacheItemRemovedCallback cacheItemRemovedCallback = null)
+        {
+            HttpRuntime.Cache.Insert(cacheKey, cacheValue, dependencies, expireTime, Cache.NoSlidingExpiration, CacheItemPriority.NotRemovable, cacheItemRemovedCallback);
+            return true;
         }
 
         /// <summary>
@@ -28,21 +65,24 @@ namespace QX_Frame.Helper_DG
         /// <param name="slidingExpiration">如果设置absoluteExpiration，则该项必须设置为TimeSpan.Zero。表示一段时间间隔，表示缓存参数将在多长时间以后被删除，此参数与absoluteExpiration参数相关联。</param>
         /// <param name="cacheItemPriority">表示撤销缓存的优先值，此参数的值取自枚举变量“CacheItemPriority”，优先级低的数据项将先被删除。此参数主要用在缓存退出对象时。</param>
         /// <param name="cacheItemRemovedCallback">表示缓存删除数据对象时调用的事件，一般用做通知程序。</param>
-        public static Boolean Cache_Add(string cacheKey, object cacheValue, CacheDependency dependencies = null, DateTime absoluteExpiration = default(DateTime), TimeSpan slidingExpiration = default(TimeSpan), CacheItemPriority cacheItemPriority = CacheItemPriority.NotRemovable, CacheItemRemovedCallback cacheItemRemovedCallback = null)
-        {
-            DateTime absoluteExpirationTime = default(DateTime);
-            if (!DateTime.TryParse(absoluteExpiration.ToString(), out absoluteExpirationTime) || absoluteExpiration.Equals(default(DateTime)))
-                absoluteExpirationTime = DateTime.MaxValue;
-            else
-                slidingExpiration = TimeSpan.Zero;
+        //public static Boolean Cache_Add(string cacheKey, object cacheValue, CacheDependency dependencies = null, DateTime absoluteExpiration = default(DateTime), TimeSpan slidingExpiration = default(TimeSpan), CacheItemPriority cacheItemPriority = CacheItemPriority.NotRemovable, CacheItemRemovedCallback cacheItemRemovedCallback = null)
+        //{
+        //    DateTime absoluteExpirationTime = default(DateTime);
+        //    if (!DateTime.TryParse(absoluteExpiration.ToString(), out absoluteExpirationTime) || absoluteExpiration.Equals(default(DateTime)))
+        //        absoluteExpirationTime = DateTime.MaxValue;
+        //    else
+        //        slidingExpiration = TimeSpan.Zero;
 
-            TimeSpan slidingExpirationTime = default(TimeSpan);
-            if (!TimeSpan.TryParse(slidingExpiration.ToString(), out slidingExpirationTime) || slidingExpiration.Equals(default(TimeSpan)))
-                slidingExpirationTime = TimeSpan.Zero;
+        //    TimeSpan slidingExpirationTime = default(TimeSpan);
+        //    if (!TimeSpan.TryParse(slidingExpiration.ToString(), out slidingExpirationTime) || slidingExpiration.Equals(default(TimeSpan)))
+        //        slidingExpirationTime = TimeSpan.Zero;
 
-            HttpRuntime.Cache.Insert(cacheKey, cacheValue, dependencies, absoluteExpirationTime, slidingExpirationTime, cacheItemPriority, cacheItemRemovedCallback);
-            return true;
-        }
+        //    HttpRuntime.Cache.Insert(cacheKey, cacheValue, dependencies, absoluteExpirationTime, slidingExpirationTime, cacheItemPriority, cacheItemRemovedCallback);
+        //    return true;
+        //}
+
+        #endregion
+
         /// <summary>
         /// Cache_Delete
         /// </summary>
@@ -65,6 +105,14 @@ namespace QX_Frame.Helper_DG
                 _cache.Remove(CacheEnum.Key.ToString());
             }
             return true;
+        }
+
+        /// <summary>
+        /// Cache Count
+        /// </summary>
+        public static int CacheCount
+        {
+            get { return HttpRuntime.Cache.Count; }
         }
     }
 }

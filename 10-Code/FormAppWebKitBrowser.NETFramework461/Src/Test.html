@@ -1,0 +1,91 @@
+<html>
+
+<head>
+    <title></title>
+</head>
+<body>
+    <article>
+        <section>
+            <input id="txt_test" placeholder="input any txt ..." width="200"/>
+            <button id=btn_1 class="btn" style="width:200px;height:100px;" onclick="ChangeTitle()">Test Button</button>
+        </section>
+        <hr>
+        <header>
+            <h2>QX_Core.FilesCenter Instruction </h2>
+        </header>
+        <hr>
+        <header>
+            <h3>1.Picture Upload By Ajax</h3>
+            <h4 style="color:red;">-> URL = http://</h4>
+        </header>
+
+        <hr>
+        <header>
+            <h3>2.Files Upload By Ajax</h3>
+            <h4 style="color:red;">-> URL = http://</h4>
+        </header>
+        <p>
+            <textarea style="width:48%;height:300px;resize:none;overflow:scroll;"><form id="uploadForm" enctype="multipart/form-data">
+<input type="file" id="files" name="files" placeholder="file" multiple>file-multiple属性可以选择多项
+<input type="button" id="btn_fileUpload" value="fileUpload">
+
+</form>
+            </textarea>
+            <textarea style="width:48%;height:300px;resize:none;overflow:scroll;"><script src="jquery-3.2.0.min.js"></script>
+            <script>
+    $(document).ready(function () {
+        var appDomain = "http://localhost:3997/";
+        $("#btn_fileUpload").click(function () {
+            var fileUpload = $("#files").get(0);
+            var files = fileUpload.files;
+            var data = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                data.append(files[i].name, files[i]);
+            }
+            $.ajax({
+                type: "POST",
+                url: appDomain + 'api/Pictures',
+                contentType: false,
+                processData: false,
+                data: data,
+                success: function (data) {
+                    console.log(JSON.stringify(data));
+                },
+                error: function () {
+                    console.log(JSON.stringify(data));
+                }
+            });
+        });
+    })
+    </script>
+            </textarea>
+        </p>
+        <header>
+            <h3>result successfully</h3>
+        </header>
+        <p>
+            {"isSuccess":true,"msg":"2 file(s) /301729 bytes uploaded successfully!","httpCode":200,"data":["/src/Pictures/4098300a-7c75-47a4-a7d0-4244a3fc1ae4.jpg","/src/Pictures/9653b11a-8f68-4018-99fa-b64869e7a1ba.png"],"dataCount":2}
+        </p>
+        <header>
+            <h3>result faild</h3>
+        </header>
+        <p>
+            {"isSuccess":false,"msg":"the picture format not support ! you must upload files that suffix like 'png','jpg','jpeg','bmp','gif'.","httpCode":500,"errorCode":0,"errorLevel":0}
+        </p>
+
+    </article>
+
+    <!-- scripts -->
+    <script>
+
+        function ChangeTitle() {
+            var val = document.getElementById("txt_test").value;
+            var sec = new Date().getSeconds();
+            document.title = sec+"-"+val;
+            console.log(document.title);
+        }
+
+    </script>
+
+</body>
+</html>

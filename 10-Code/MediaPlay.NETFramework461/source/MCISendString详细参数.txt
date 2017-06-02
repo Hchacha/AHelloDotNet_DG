@@ -1,0 +1,574 @@
+ MCISendString详细参数
+
+
+streamaudioalgorithmvideooutput工作
+（注：本文以2000年七月的MSDN解释为准）
+
+MCI Command String是多媒体设备的程序接口。通过它，我们可以打开一个多媒体文件，例如mp3，VCD，Mpeg4格式的文件等等，并对它进行播放，暂停，关闭等操作。现在小弟有幸给大家介绍一下MCI Command String的使用方法。
+MCI Command String是通过mciExecute或mciSendString两个函数执行的。这两个函数的声明如下：
+Private Declare Function mciExecute Lib "winmm.dll" Alias"mciExecute" (ByVal lpstrCommand As String) As Long
+Private Declare FunctionmciSendString Lib "winmm.dll" Alias "mciSendStringA" (ByVallpstrCommand As String, ByVal lpstrReturnString As String, ByVal uReturnLengthAs Long, ByVal hwndCallback As Long) As Long
+这两个函数都有一个叫lpstrCommand的参数，这个参数就是我们今天要介绍的MCI Command String。其中函数mciSendString还有三个参数，lpstrReturnString是一个字符串，它用来接收mciSendString函数返回的信息（例如，我们在lpstrCommand中的命令是让函数返回打开的文件的设备类型，那么函数就把设备类型的信息保存在lpstrReturnString参数中。）；uReturnLength参数用来指定参数lpstrReturnString的长度；hwndCallback是接收“wait”、“notify”消息的窗口句柄，在Visual Basic中调用时该参数设为0即可。
+如果命令执行出错，函数mciExecute会直接弹出一个对话框，提示出错的原因。而mciSendString函数会返回一个ErrorCode （错误代码），该代码的具体含义您可以参考MSDN中的目录“PlatformSDK/Graphics and Multimedia Services/Windows Multimedia/MultimediaReference/Multimedia Constants/MCIERR Return Values”。您可以根据具体情况选择到底使用哪一个函数来执行MCI命令。例如，在调试的时候使用mciExecute，以便快速地获得错误原因，而在将要发布的程序中使用mciSendString函数，让程序中已设置的错误陷阱去处理错误，以避免频繁的错误提示而使用户觉得厌烦。（对于有返回值的MCI命令，必须使用mciSendString函数。）
+<!--[if !supportEmptyParas]--> <!--[endif]-->
+在熟悉了这两个函数后，我们就可以进入正题――MCI Command String了。
+MCI Command String的命令格式是这样的：lpszCommand lpszDevice lpszCommandFlag lpazFlag
+lpszCommand是mci命令，例如open，play，stop，close等等。
+lpszDevice是设备名（或文件名）。例如，我们用以下的程序打开了我的文档中的Music01.dat文件，并用“alias”参数将其别名设为OpenFile：
+dim lReturn as long                                                               （1）
+lReturn=mciExecute(“open C:/Mydocu~1/Music01.dat alias OpenFile typeMPEGVideo”)      （2）
+那么，在以后的MCI Command String中lpszDevice参数必须指定为OpenFile。例如，关闭该文件的代码如下：
+lReturn=mciExecute(“close OpenFile”)                                               （3）
+如果我们没有为打开的文件设定别名，则以后调用的MCI Command String中lpszDevice参数为DOS路径名加文件名。例子如下：
+dim lReturn as long                                                               （4）
+lReturn=mciExecute(“open C:/Mydocu~1/Music01.dat type MPEGVideo”)                  （5）
+lReturn=mciExecute(“close C:/Mydocu~1/Music01.dat type MPEGVideo”)                  （6）
+从这里可以看出，设定别名的好处是减少了代码的输入。
+LpszCommandFlag是mci命令的参数。如上代码（2），“alias OpenFile”以及“type MPEGVideo”就是命令“open”的参数。通常一个mci命令的参数少则几个多则几十个。
+LpazFlag可以为指定为“wait”或“notity”。如果为“wait”，那么mci命令执行完毕后会向父窗体发送MCI_WAIT消息，“notity”则发送MCI_NOTIFY消息。此参数在Visual Basic中无甚用处。
+<!--[if !supportEmptyParas]--> <!--[endif]-->
+在此先声明一下，微软提供的winmm.dll函数库支持的多媒体设备的类型共有cdaudio，dat，digitalvideo，other，overlay，scanner，sequencer，vcr，videodisc，waveaudio十种（注意：winmm.dll函数库不支持RealPlay格式的文件。您可以用以下代码获得已打开的文件的类型：lReturn=mciSendString(“capabilitylpszDevice device type”,sReturn,32,0) ）。至于哪一类设备支持哪些参数，您可以在MSDN中查找关键字“MCI CommandStrings”，选中所列出的命令，在其中的HTML帮助文档中通常会有一个表格告诉你哪些设备支持哪些参数或者在第一段中有信息告诉您哪些设备支持该命令。
+好了，现在让我们对又繁索，又该死，又强大的mci命令参数作一个系统的介绍。（限于篇幅，本文仅介绍大部份主要命令的参数。）
+<!--[if !supportEmptyParas]--> <!--[endif]-->
+open：
+该命令用来打开一个多媒体文件。所有的设备都支持这个命令。在任何mci命令执行前，都必须先使用该命令打开多媒体文件，以初始化设备。
+该命令的几个参数意义如下：alias device_alias――指定欲打开文件的别名；shareable――是否以共享方式打开，如果不指定该参数，则以不共享的方式打开，也就是说，打开某一个多媒体文件后，其它程序不能再打开它，如果指定该参数，则以共享方式打开；type device_type――指定该文件在Windows中注册的多媒体文件名（注：Windows中注册的多媒体文件名与设备类型名并不相同，设备类型只有以上所说的十种类型。RealPlay格式的音视频流是第三方公司开发的媒体类型，不属于Microsoft Windows支持的设备。而Windows中注册的多媒体文件名请查看C:/Windows/win.ini文件的[mci extensions]小节。），如MPEGVideo，AVIVideo，waveaudio等，MPEGVideo、AVIVideo类型的文件其实都属于设备digitalvideo。
+对于open命令，有几个须注意的方面。首先，用open命令打开一个文件时，文件的路径必须是DOS格式的短路径。您可以用API函数GetShortPathName返回某路径的该格式。对于参数type device_type，复合型设备的文件（如：MPEGVideo）mci设备会自动根据其在Windows中注册的扩展名（要想获得某扩展名的文件在Windows中注册的类型名，请查看C:/Windows/win.ini文件的[mci extensions]小节。）设置该参数（所以对于C:/Windows/win.ini文件的[mci extensions]小节中已列的扩展名，不必指定该参数），但如果设备无法根据其扩展名获得文件的类型的话，就必须指定该参数，如果不指定则会提示：“这不是已注册的mci设备“，而简单型设备（如CD音轨设备，可编程控制的录放像机，可编程控制的镭射影碟机）则不必指定该参数。
+如果该命令被成功执行，那么返回值为0。至此，您就可以用alias指定的别名执行各种各样的mci命令了。
+（注意：以下命令所能实现的功能虽然很令人激动，但是通常您打开的文件支持的命令没有几个。）
+（限于篇幅，每个命令具体的参数与MCI设备的支持情况请参照MSDN。在此恕不列出。）
+（参数中的黑体字表示这是一个MCI命令，斜体字表示该单词所表示的是MCI参数的变量，必须由开发者指定。）
+<!--[if !supportEmptyParas]--> <!--[endif]-->
+<!--[if !supportEmptyParas]--> <!--[endif]-->
+Break：指定一个键来退出使用wait参数的当前mci命令。这是一个MCI系统命令，所有MCI设备都支持这个命令。
+ on virtual_ key_ code: 指定一个键用来退出含有wait参数的命令
+ off: 使当前break键无效
+Capability：获得已打开的设备的功能，比如能否播放，能否退出，能否记录等等。所有MCI设备都支持这个命令。
+can detect length：如果设备能侦测长度则返回TRUE
+can eject：如果设备能弹出则返回TRUE
+can freeze：如果设备支持冻结数据则返回TRUE
+can lock：如果设备支持锁定数据则返回TRUE
+can monitor sources：如果设备能将一个输入源输出到指定的输出源则返回TRUE，与当前的输入源无关
+can play：如果设备能播放则返回TRUE
+can preroll：如果设备在cue命令中支持preroll参数则返回TRUE
+can preview：如果设备能向前快放则返回TRUE
+can record：如果设备支持记录则返回TRUE
+can reverse：如果设备能后退则返回TRUE
+can save：如果设备能保存数据则返回TRUE
+can stretch：如果设备能缩放输出的图像则返回TRUE
+can stretch input：如果设备能在数据流解压到帧缓冲的同时能缩放输出的图像则返回TRUE
+can test：如果设备能识别“test“关键字则返回TRUE
+cav：当与其它项组合使用时，该参数返回申请CAV格式时，videodiscs设备的返回信息，如果没有插入任何videodiscs该参数为默认值
+clock increment rate：返回外部时钟将每秒钟分为几个单位，如millisecond返回1000，0表示没有支持的外部时钟
+clv：当与其它项组合使用时，该参数返回申请CLV格式时，videodiscs设备的返回信息
+compound device：设备支持文件名时返回TRUE
+device type：返回设备类型名，其值可以如下：
+         cdaudio
+         dat
+         digitalvideo
+         other
+         overlay
+         scanner
+         sequencer
+         vcr
+         videodisc
+         waveaudio
+fast play rate：返回每秒快放的帧数，如果为0则不支持快放
+has audio：如果设备支持音频则返回TRUE
+has clock：如果设备支持时钟则返回TRUE
+has still：如果设备将文件视为一静态图像比动态视频文件更快则返回TRUE
+has timecode：如果设备支持timecode则返回TRUE
+has video：如果设备支持视频则返回TRUE
+inputs：返回输入设备的总数
+maximum play rate：返回最快的播放速度，单位为帧每秒
+minimum play rate：返回最慢的播放速度，单位为帧每秒
+normal play rate：返回正常的播放速度，单位为帧每秒
+number of marks：返回最大的遮罩数量，0表示不支持遮罩
+ouputs：返回输出设备的总数
+seek accuracy：返回定位某帧的精确度，0表示精确定位，1表示与所要定位的帧的误差不大于1帧
+slow play rate：返回慢放的播放速度，单位为帧每秒
+uses files：如果复合设备使用的数据保存在文件中则返回真
+uses palettes：如果设备使用调色板则返回真
+windows：返回设备支持的可以同时显示的窗口数量
+Capture：将帧缓冲的数据拷贝到指定的文件中。digital-video支持该命令。
+ at pathname：指定所捕捉的帧缓冲中的图像所要保存的路径和文件名
+ at rectangle：指定所捕捉的帧缓冲中的图像区域，默认为put命令的source参数指定的区域
+ 注意：该命令可能会在播放的时候或者在需要资源的操作中失效。如果帧缓冲在实时地更新，则会暂停。
+Close：关闭设备，释放内存。当一个MCI设备的所有实例或文件都关闭的时候，该MCI设备被卸载。所有设备支持该命令。
+ 注意：如果要关闭所有的设备需如此：close all
+Configure：显示一对话框，以设置设备的某些属性。digital-video支持该命令。
+Copy：将数据拷贝至剪切板。digital-video支持该命令。
+at rectangle：指定要拷贝的帧缓冲的区域，默认为整个帧缓冲
+audio stream stream：指定该命令影响的当前工作组的音频流，如果使用了该参数，又想拷贝视频流，则必须指定“video stream“参数，默认为audio stream＋video stream
+from position：指定开始记录点，默认为当前位置
+to position：指定终点，该位置的视音频流不被记录，默认为当前工作组的终点
+video stream stream：指定该命令影响的工作组中的视频流，如果使用了该参数，又想拷贝音频流，则必须指定“audio stream“参数
+Cue：在播放或记录之前执行该命令可以加快播放或记录速度。digital-video，VCR和waveform-audio支持该命令。
+from position：指定起始点
+input：准备记录。digital-video可以省略
+noshow：准备播放，但不先显示。
+output：准备播放，如果input和output都没指定，默认为output
+preroll：预滚动到下一位置
+reverse：指定为倒放
+to position：指定终点
+注意：如果设备正在播放、记录或暂停则该命令会失败。使用了“output”参数时，再使用“play”命令的“from”、“to”或“reverse”参数则会退出该命令，使用了“input”参数时，再使用“record”命令的“from”、“to”或“initialize”参数会退出该命令。
+Cut：将工作区的数据剪切到剪切板。digital-video支持该命令。
+ at rectangle：指定每一帧的区域。默认为整个帧。当该参数被指定时，帧并不被删除，代替原图像信息的为黑色块
+ audio stream stream：指定该命令影响的当前工作组的指定音频流，如果使用了该参数，又想剪切视频流，则必须指定“video stream“参数，默认为audio stream＋video stream
+ from position：指定开始剪切点，默认为当前位置
+ to position：指定终点，终点并不被剪切，默认为工作组终点
+ video stream stream：指定该命令影响的当前工作组的指定视频流，如果使用了该参数，又想剪切音频流，则必须指定“video stream“参数，默认为audio stream＋video stream
+ 注意：在没有调用“save”命令前,虽然播放的时候好像“cut”命令已经成功了,但只有当“save”命令被调用后该命令所作的删除才会被写入文件
+Delete：从已打开的多媒体文件中删除数据段。digital-video和waveform-audio支持该命令。
+ at rectangle：指定每帧删除的区域。默认为整个帧。当该参数被指定时，帧并不被删除，代替原图像信息的为黑色块
+ audio stream stream：指定该命令影响的当前工作组的音频流。如果使用了该参数，又想删除视频流，则必须指定“video stream“参数，默认为audio stream＋video stream
+ from position：指定开始位置，默认为当前位置
+ to position：指定终点，默认为工作组终点
+ video stream stream：指定该命令影响的当前工作组的视频流，如果使用了该参数，又想删除音频流，则必须指定“video stream“参数，默认为audio stream＋video stream
+ 注意：在执行任何使用position参数的命令前，你可以使用“set”命令的“time format”参数来设定媒体的时间格式，如毫秒，帧等
+Escape：将设备指定的信息传送到某设备。videodisc设备支持该命令。
+Freeze：终止视频输入或输出，禁止视频流从帧缓冲中获得数据。dgital-video、video-overlay和VCR支持该命令。
+ at rectangle：指定区域。对于digital-video设备，在指定区域中的像素会遮罩覆盖。rectangle的格式为X1 Y1 X2 Y2。X1 Y1为左上角坐标，X2 Y2指定宽度和长度
+ field：冻结指定的区域，该参数为默认的
+ frame：冻结整个帧
+ input：冻结输入图像的当前帧，不管当前正在播放还是暂停
+ output：冻结VCR的当前帧输出。如果VCR在播放的时候执行该命令，则当前帧被冻结且VCR被暂停。如果VCE已暂停则当前帧被冻结。如果input和output都没指定，则默认为output
+ outside：指定被冻结的为“at”参数所定义的区域外面部分
+ 注意：要指定一个不规则区域，可以组合使用freeze和unfreeze命令。一些video-overlay设备会限制区域的复杂度
+index：控制VCR设备实屏显示。仅VCR设备支持
+ off：关闭实屏显示
+ on：打开实屏显示。显示的项目为“set”命令的“index”参数指定的信息
+Info：获得设备信息，例如算法，版权，所打开的文件，UPC等等。所有MCI设备都支持该命令。
+ audio algorithm：返回当前音频压缩算法的名称
+ audio quality；返回当前音频压缩质量的描述。如果将其quality设为某一值而未使用其指定值可能会返回unknown
+ copyright：返回MIDI文件的版权信息
+ file：返回复合设备使用的文件名。如果设备没有打开一个文件而且“load”命令也没被用过，那么返回一个空字符串
+ info identity：为CD产生一个唯一的序列号
+ info upc：产生CD的UPC（Universal productCode全球产品码）
+ input：返回当前输入设备的描述
+ name：返回sequence名字
+ output：返回当前输出设备的描述
+ product：返回该设备的描述。返回信息经常包括产品名称和型号。返回信息经常是31个字节或更小
+ still algorithm：返回当前静态图像压缩算法名称
+ still quality：返回当前静态图像压缩质量描述名。如果将其quality设为某一值而未使用其指定值可能会返回unknown
+ usage：返回工作组中视音频数据的使用限制描述
+ version：返回设备驱动或硬件的版本
+ video algorithm：返回当前视频压缩算法名称
+ video quality：返回当前视频压缩质量描述名如果将其quality设为某一值而未使用其指定值可能会返回unknown
+ window text：返回设备使用的窗口的标题
+List：返回视频和音频的数量和类型。digital-video和VCR支持该命令。
+ audio algorithm：返回音频压缩算法名称
+ audio quality algorithm algorithm：返回“algorithm”指定的压缩质量级别。如果“algorithm”为“current，”则返回当前压缩算法的质量级别
+ audio source count：返回音频输入的总数
+ audio source number index：返回“index”指定的音频输入源的类型
+ audio stream：返回当前工作组中的音频流名称，例如English或German
+ count：返回指定类型的数量（供“number index”使用）
+ number index：返回一描述由index指定的类型的字符串。index必须在1至count返回的数值之间
+ still algorithm：返回静态图像压缩算法名称
+ still quality algorithm algorithm：返回由algorithm指定的静态图像的压缩质量级别。如果“algorithm”为“current”，则返回当前压缩算法的质量级别
+ video algorithm：返回视频压缩算法名称
+ video quality algorithm algorithm：返回由algorithm指定的视频压缩质量级别。如果“algorithm”为“current”，则返回当前压缩算法的质量级别
+ video source：返回视频源信息。当使用“count”参数时，返回的是视频源数量。当使用“number”参数时，返回的是某一视频源的类型。MCI定义了以下的类型常量：“ntsc”，“rgb”，“pal”，“secam”，“svideo”，“generic”。同一类型可能会返回多个源。当某一频道允许使用多个信号时，则会使用“generic”数据源
+ video source count：返回视频输入的总数
+ video source number index：返回“index”指定的视频输入源类型
+ video stream：返回当前工作组视频流名称，例如“funny ending”或“sad ending”
+ 注意：对于VCR设备，“video source”和“audio source”必须与“count”或“number”参数同时使用。如果为“count”，则返回输入的视频或音频流的总数。如果为“number”，则返回相应的输入设备类型。它可以为以下值：“tuner”，“line”，“svideo”，“aux”，“generic”。一般来说，应该先用“count”参数查询一下VCR设备，再指定“number”参数
+Load：用设备指定的格式打开一个文件。类似于open的功能。digital-video和video-overlay支持该命令。
+Mark：控制记录或删除磁带上的遮罩，VCR设备支持该命令。
+ erase：如果当前位置存在遮罩，则擦除它
+ write：写入遮罩，VCR设备必须在播放或者记录中
+ 遮罩是可以被VCR设备在高速查找中检测到的写入到记录体中的特殊信号。遮罩是VCR的特点。
+Monitor：指定当前数据源，默认的当前数据源是当前工作区。转换当前源会转换所有的当前源中的音视频流。digital-video设备支持该命令。
+ file：指定当前工作组为当前数据源
+ input：指定外部输入为当前数据源。如果正在播放，则先暂停。如果“setvideo”命令“on”参数已设，则本参数会显示一个默认的隐藏窗口。当指定一个输入的数据源时，设备的其它实例的功能可能会受到限制
+ method method：当和“input”参数一起使用时，“method”值可以为“pre”，“post”或“direct”。
+Open：
+ alias device_alias：指定设备的别名。一但指定该参数，则后续命令的“device_id”必须为变量“device_alias”
+ buffer buffer_size：设定waveform-audio设备的缓冲区大小，单位为秒。典型的设置为4秒，MCIWAVE设备最小为2秒，最大为9秒
+ parent hwnd：指定父窗体句柄
+ shareable：初始化设备时将其设为共享。如果某设备已设为共享方式打开，而又想再次打开该设备，则必须再指定该参数。MCISEQ sequencer及MCIWAVE设备不支持文具参数
+ sytle child：以子窗体方式打开一个窗体
+ style overlapped：以重叠方式打开一个窗体
+ style popup：以弹出式打开一个窗体
+ style style_type：指定一窗体样式
+ type device_type：指定某文件的设备类型
+ 注意：如果使用“capability”命令为打开的设备返回设备类型，对于CD audio设备返回“cdaudio”，videodisc返回“videodisc”，MIDI sequencer返回“sequencer”，digital-video返回“AVIVideo”，waveform-audio返回“waveaudio”。
+Paste：将剪切板的内容拷贝至工作区。digital-video设备支持该命令。
+ at rectangle：指定帧数据粘贴的区域。包括边界
+ audio stream stream：该命令影响工作区中指定的音频流。如果指定该参数后又想粘贴视频流，则必须指定“video stream”参数。默认为audio stream＋video stream
+ insert：指定数据将被插入到工作区。插入点的数据会被移动到前面。这是默认设定
+ overwrite：将数据拷贝到工作区，插入点后的数据会被覆盖
+ to position：指定数据粘贴的工作区位置。默认为当前位置
+ video stream stream：该命令影响工作区中指定的视频流。如果指定该参数后又想粘贴音频流，则必须指定“audio stream”参数。默认为audio stream＋video stream
+Pause：暂停播放或记录。CD audio，digital-video，MIDI sequencer，VCR，videodisc和waveform-audio支持该命令。
+Play：呵呵，这个命令无须多说。CD audio，digital-video，MIDI sequencer，videodisc，VCR和waveform-audio支持该设备。
+ at time：指定设备执行该命令的时间。
+ fast：指定设备快放。可以用“set”、“status”命令的“speed”参数设置和获取播放速度
+ from position：指定回放开始位置。默认为当前位置
+ fullscreen：指定使用一个全屏窗口播放。该参数仅对压缩文件有效，未压缩文件不能全屏播放
+ repeat：当播放到最终位置时重新开始播放
+ reverse：指定设备倒放。不能与“to position”参数同时使用。对videodisc设备，仅CAV格式的支持
+ scan：在不使视频失效的情况下尽可能地快放。对videodisc设备，仅CAV格式的支持
+ slow：指定设备慢放。可以用“set”、“status”命令的“speed”参数设置和获取播放速度
+ speed integer：按指定速度播放videodisc设备，单位帧每秒。仅CAV格式的支持
+ to position：指定回放终点。默认为媒体的终点
+ window：指定用与设备实例关连的窗口播放，这是默认设置
+Put：决定显示源和显示目的窗口的区域。digital-video和video-overlay支持该命令。
+ destination：选择目的窗口的整个客户区显示图像
+ destination at rectangle：选择目的窗口的部份客户区显示图像
+ frame：选择整个帧缓冲区接收输入的视频图像
+ frame at rectangle：选择部份帧缓冲区接收输入的视频图像
+ source：选择整个要在目的窗口中显示的图像
+ source at rectangle：选择部份要在目的窗口中显示的图像
+ video：选择整个将被帧缓冲区捕捉的输入视频图像
+ video at rectangle：选择部份将被帧缓冲区捕捉的输入视频图像
+ window：恢复最初的播放窗口大小，这个命令同时也显示窗口
+ window at rectangle：改变显示窗口的大小和位置。
+ window client：恢复窗口的客户区
+ window client at rectangle：改变窗口客户区的大小和位置
+ “rectangle”的格式为X1 Y1 X2 Y2。X1 Y1为左上角坐标，X2 Y2指定宽度和长度
+ “put”命令定义了如下的区域（仅对video-overlay而言）：“video rectangle”定义了要捕捉的输入视频图像的区域，“frame rectangle”定义了接收输入视频图像的帧缓冲区域，“source rectangle”定义了拷贝到目的窗口的帧缓冲区域，“destinationrectangle”定义了接收视频图像的窗口客户区
+Quality：自定义音频或视频的quality level和静态图像的压缩方式（例如BMP、JPG）。digital-video设备支持该命令
+Realize：自定义图像显示窗口的调色板。digital-video支持该命令
+Record：无须多说。VCR和waveform-audio设备支持该命令。虽然digital-video和MIDI sequencer设备支持该命令，但是MCIAVI和MCISEQ驱动不执行该命令
+ at rectangle：指定用作像素压缩、保存源的外部输入的一个矩形区域，默认为“put”命令“video”参数指定的区域。
+ at time：指定设备执行该命令的时间
+ audio stream stream：指定记录的音频流
+ from position：指定记录的开始位置，默认为当前位置
+ hold：当记录结束时暂停。记录结束时，“monitor”命令的“file”参数会被自动执行，如果想返回，执行“minitor”的“input”参数
+ initialize：初始化磁带
+ insert：指定新数据会被插入到文件的当前位置中
+ overwrite：指定新数据会覆盖文件中原数据
+ to position：指定记录的终点
+ video stream stream：指定记录的视频流
+ 如果执行了“stop”或“pause”命令则记录中止。在使用任何有关位置值的参数之前，你可以使用“set”命令设置所希望的时间单位
+Reserve：为设备的工作区分配连续的磁盘空间。digital-video设备支持该命令。
+ in path：指定用来保存记录数据的临时文件的目录路径。文件名由设备自动命名，该临时文件在设备被关闭时删除
+ size duration：指定工作区使用的近似磁盘空间。参数“duration”必须表示为当前的时间格式。如果省略，则设备会使用该设备默认的磁盘空间大小
+ 指定磁盘空间后，接下来的“record”和“save”命令会使用该命令申请的磁盘空间。如果工作区有未保存的数据，在执行该命令后会丢失。某些设备并不能识别该命令，并忽略它。如果在记录之前没有执行该命令，则记录时会按设备的默认值先执行本命令。如果你想更好地控制磁盘分配延迟，控制磁盘分配大小和磁盘位置，请使用本命令。已分配的磁盘空间直到数据保存之后，或设备实例关闭之后才释放。
+Restore：将一静态图像从文件拷贝到帧缓冲中。digital-video设备支持该命令。
+ at rectangle：指定相对于帧缓冲的区域。“rectangle”的格式为X1 Y1 X2 Y2。X1 Y1为左上角坐标，X2 Y2指定宽度和长度
+ from filename：指定保存图像的文件名。该参数必须指定
+Resume：继续播放或记录。digital-video，VCR和waveform-audio支持该命令。虽然CD audio，MIDI sequencer和videodisc设备支持该命令，但是MCICDA，MCISEQ，MCIPIONR驱动不支持。
+Save：保存一个mci文件。video-overlay和waveform-audio设备支持该命令。虽然digital-video设备和MIDI sequencer也支持该命令，但是MCIAVI和MCISEQ驱动不支持。
+ abort：退出正在进行的保存操作。该参数必须单独使用
+ at rectangle：指定相对帧缓冲的矩形区域。“rectangle”的格式为X1 Y1 X2 Y2。X1 Y1为左上角坐标，X2 Y2指定宽度和长度
+ filename：指定要保存的文件名。如果路径没有指定，文件会保存在上一个显式或隐式执行的reserve命令指定的路径中。如果没有执行过reserve命令，默认为应用程序的保存路径，该参数必须指定
+keepreserve：在“reserve”命令未执行前指定未使用的磁盘空间
+Seek：定位到指定的帧位置并等待。
+ at time：指定设备执行本命令的时间
+ mark mark_num：定位到“mark_num”变量指定的遮罩上。遮罩是可以被VCR设备在高速查找中检测到的写入到记录体中的特殊信号。遮罩是VCR的特点。
+ reverse：指定在VCR和CAV格式的videodisc上反向定位。如果指定to参数，则该参数无效。对VCR本参数与“mark”参数同时使用
+ to end：定位到媒体的终点
+ to position：定位到“position”指定的媒体位置
+ to start：定位到媒体的起始点
+ 在使用任何有关位置值的参数之前，你可以使用“set”命令设置所希望的时间单位。digital-video支持两种形式的定位方式。这两种方式你可以使用“set”命令来设置。“seek exactly on”是指定位到指定的那一帧。“seek exactly off”是指定位到与指定帧最接近的关键帧。如果CD audio正在播放时执行该命令，则播放会暂停。如果videodisc设备执行该命令，设备会关闭音频，并向前或向后快放，直到定位成功。如果waveform-audio设备执行该命令，其行为取决于取样大小。如果取样大小为16bit或更大，当指定的位置与取样起始点不同时，“seek”命令定位到最近的取样起始点。
+Set：设置某些参数（例如左声道，光驱开关，Time Format等等。）。CD audio，digital-video，MIDI sequencer，VCR，videodisc，video-overlay和waveform-audio支持该命令。
+ alignment integer：设置与传送到waveform-audio设备的数据起始部份有关的数据块队列
+ any input：在记录时使用任何支持当前格式的输入。这是默认设置
+ any output：在播放时使用任何支持当前格式的输出。这是默认设置
+ assemble record on
+ assemble record off：在“assemble”模式下，所有磁道以设备预定义的格式记录。
+ audio all off：
+ audio all on：关闭、打开音频输出
+ audio left off
+ audio left on
+ audio right off
+ audio right on：关闭、打开左、右声道
+ bitspersample bit_count：设置用以记录或播放的每次PCM（Pulse CodeModulation）取样bit值。文件以该取样频率保存
+ bytespersec byte_rate：设置每秒播放或记录的平均byte数量。文件以该取样频率保存
+ channels channel_count：设置播放或记录的频道
+ clock time：将外部时间设为变量“time”。该变量为一无符号长整形数值
+ counter format：设置计数器格式
+ counter value：将VCR计数器设为指定的值
+ door closed：收回光盘托盘
+ door open：退出光盘
+ file format format：指定“save”或“capture”命令使用的时间格式。如果省略，则设备默认的格式会被使用。如果指定了一个与当前算法和“quality”相冲突的文件格式，则会使用默认的文件格式。以下都是以定义的文件格式：
+ avi：AVI格式；avss：AVSS格式；dib：DIB格式；jfif：JFIF格式；jpeg：JPEG格式；mpeg：MPEG格式；rdib：RLE DIB格式；rjpeg：RJPEG格式
+ format tag pcm：设置播放或记录的格式为PCM，文件即以该格式保存
+ format tag tag：设置播放或记录的格式，文件即以该格式保存
+ index timecode
+ index counter
+ index date
+ index time：设置VCR的当前显示
+ input integer：设置音频输入的频道
+ length duration：设置用户指定的VCR磁带长度
+ master midi：设置MIDI sequencer为同步源，同步数据以MIDI格式发送
+ master none：禁止MIDI sequencer发送同步数据
+ master smpte：设置MIDI sequencer为同步源，同步数据以SMPTE（Society of MotionPicture and Television Engineers电影与电视工程师协会）格式发送
+ offset time：设置SMPTE偏移。变量“time”的格式为：hh:mm:ss:ff；hh是小时，mm是分钟，ss是秒，ff是帧
+ output integer：设置音频输出的频道
+ pause timeout：设置“pause”命令的最大持续时间，单位为毫秒。0表示没有暂停
+ postroll duration duration：以当前时间格式设置执行一个“stop”或“pause”命令时用来中断VCR传输的时间长度
+ port mapper：将MIDI印射设置为接收MIDI消息的端口
+ port none：取消MIDI消息传送
+ port port_number：将MIDI端口设置为接收MIDI消息
+ power on
+ power off：打开、关闭一个设备的电源
+ preroll duration duration：以当前时间格式设置用来稳定VCR输出的长度
+ record format SP
+ record format LP
+ record format EP：设置VCR记录模式，SP：正常播放；EP：外部播放；LP长播放
+ samplespersec integer：设置播放或记录的取样速度，文件即以该格式保存
+ seek exactly on
+ seek exactly off：设置两种定位模式。“seek exactly on”是指定位到指定的那一帧。“seek exactly off”是指定位到与指定帧最接近的关键帧。
+ slave file：设置MIDI sequencer使用文件数据作为同步源，这是默认设置
+ slave midi：设置MIDI sequencer使用输入的MIDI数据作为同步源。sequencer以MIDI格式识别数据
+ slave none：设置MIDI sequencer忽略同步源数据
+ slave smpte：设置MIDI sequencer使用输入的MIDI数据作为同步源。sequencer以SMPTE格式识别数据
+ speed factor：设置工作区音频视频回放的速度。“factor”为一比例值：1000表示正常速度播放，500表示以正常速度一半播放，2000表示以正常速度2倍播放。为0时表示在不丢音视频帧的情况下尽可能地快放
+ still file format format：设置“capture”命令使用的文件格式
+ tempo tempo_value：设置sequence速度，以当前时间格式
+ time format btyes：在PCM格式文件中，设置时间格式为bytes。所有的位置信息都将表示为bytes值
+ time format frames：设置时间格式为帧
+ time format hms：设置时间格式为小时，分钟，秒
+ time format milliseconds：设置时间格式为毫秒
+ time format msf：设置时间格式为分钟，秒，帧。其表示为：mm：ss：ff。mm为分钟，ss为秒，ff为帧
+ time format samples：设置时间格式为取样频率
+ time format smpte24
+ time format smpte25
+ time format smpte30：设置时间格式为SMPTE帧速度
+ time format smpte 30 drop：设置时间格式为SMPTE30降速（？）
+ time format song pointer：设置时间格式为歌曲指针
+ time format tmsf：设置时间格式为磁道、分钟、秒、帧形式。其表示为：tt：mm：ss：ff。tt为磁道，mm为分钟，ss为秒，ff为帧
+ time format track：设置位置格式为磁道
+ time mode counter：设置位置信息模式为使用VCR计数器
+ time mode detect：设置位置信息模式为基于探测磁带时间代码信息的格式
+ time mode timecode：设置磁带的位置信息模式为使用时间代码信息的格式
+ video off
+ video on：关闭、打开视频
+Setaudio：设置音频参数（例如低音，高音，左右声道）。digital-video和VCR支持该命令。
+ algorithm algorithm：选择一个指定的音频压缩算法。该算法将用在“reserve”和“record”命令中。MCI定义“algorithm”为：“g711”“g721”“g722”“g728”“pcm”“cdxa”“adpcm”“adpcm4e”
+ alignment to integer：设置与waveform-audio设备的输入数据起始部份有关的数据块队列
+ bass to factor：设置音频低音值
+ bitspersample to bit_count：设置记录时每次取样的bit数量
+ bytespersec to integer：设置每秒记录的平均byte数量
+ clocktime：指定在“over”参数中使用的时间单位为毫秒
+ input：激活“bass”“treble”“volume”参数的设置。使之影响播放和记录信号。这是默认设置
+ left off
+ left on：关闭、打开左声道
+ left volume to factor：设置左声道的音量
+ monitor to type number number：控制哪个输入源会传递到VCR的输出而不改变记录源的选择。“type”可以是“output”或其它有效的输入源。如果“number”没有指定，则第一个此类型的输入会被选择
+ off
+ on：关闭、打开音频
+ output：激活“bass”“treble”“volume”参数的设置。使之影响播放信号，并不影响记录信号
+ over duration：指定如果使用“factor”变量的参数有所改变，将花多长时间。“duration”为当前时间格式，如果不指定该参数，参数变化会立即执行
+ quality descriptor：指定音频记录到一个文件时压缩的特征。所有设备都支持“low”“medium”“high”
+ record off：清除音频源选择，接下来的“record”命令不会记录音频数据
+ record on：打开音频数据记录选择。这是默认项
+ record track track_numberoff：清除“track_number”指定的音频源选择，接下来的“record”命令不会记录该音频数据
+ record track track_numberon：打开“track_number”指定的音频源选择
+ right off
+ right on：关闭、打开音频右声道输出
+ right volume to factor：设置右声道的音量
+ samplespersec to integer：在“pcm”或“adpcm”算法下记录的取样频率，文件即以该格式保存
+ source to sourcename：设置音频输入源。“sourcename”可以是“left”“right”“average”“stereo”，分别意为左，右，平均，立体声
+ source to type number number：选择将记录在磁带上的音频源。“type”必须是“tuner”“line”“svideo”“aux”“generic”“mute”
+ stream to number：指定工作区回放的音频流。如果该参数没有指定，而且文件也没有定义一个默认值，则音频驱动器物理上第一遇到的音频流会被播放
+ track track_number off：关闭指定磁道
+ track track_number on：打开指定磁道
+ treble to factor：设置高音值
+ volume to factor：设置左右声道音量
+ 据本人的经验，低音值，高音值，及音量在0至1000之间取值。关于音频还有一个重要的方面容易让人迷惑：有些朋友期望将左（右）声道关闭来禁止左（右）声道的声音，但这种结果是剩下的声道仍有些微被关闭的声道的声音。这是因为默认的音频源总是立体声的，而立体声即是在左（右）声道中掺入轻微的右（左）声道的声音，以达到立体效果。要想完全禁止某一声道的声音，请使用“source to sourcename”参数。
+Setvideo：设置视频回放或捕捉的参数（例如亮度、对比度、伽马值等。）。digital-video设备支持该命令。
+ algorithm algorithm：指定下一个“reserve”或“record”命令使用的视频压缩算法。MCI已定义的有：“mpeg”“h261”，如果指定的算法与当前的文件格式冲突，则会使用文件默认的算法
+ bitsperpel to count：设置用“capture”或“record”保存数据时每像素bit数量
+ brightness to factor：设置视频亮度
+ clocktime：指定“over”参数使用的时间单位为毫秒
+ color to factor：设置视频饱和度（色彩）
+ contrast to factor：设置视频对比度
+ gamma to value：设置伽马修正值。“value”为2200表示伽马值为2.2，1000表示不做伽马修正，
+ halftone：使用halftone调色板代替默认的调色板
+ input：激活“brightness”“color”“contrast”“gamma”“sharpness”“tint”参数设置，使之影响输入信号和记录信号
+ key color to r:g:b：设置“key color”为一RGB值
+ key index to index：设置“key index”。“index”必须为一物理调色板的索引
+ monitor to type number number：控制哪个输入源会传递到VCR的输出而不改变记录源的选择。“type”可以是“output”或其它有效的输入源。如果“number”没有指定，则第一个此类型的输入会被选择
+ off
+ on：关闭、打开视频。关闭视频会将“put”命令中目的区域的像素（或者当前窗口客户区域）设为某一纯色。该命令不影响帧缓冲
+ output：激活“brightness”“color”“contrast”“gamma”“sharpness”“tint”参数设置，使之影响输入信号，并不影响记录信号
+ over duration：指定如果使用“factor”变量的参数有所改变，将花多长时间。“duration”为当前时间格式，如果不指定该参数，参数变化会立即执行
+ palette color color overindex to newrgb：设置一个新调色板颜色。
+ palette handle to handle：设置设备使用的调色板句柄。仅使用调色板的设备支持该参数。如果“handle”为0，则默认调色板会被使用
+ quality descriptor：指定视频记录到一个文件时压缩的特征。所有设备都支持“low”“medium”“high”
+ record frame rate to rate：设置记录运动图像的速度。单位为每秒帧速乘1000。如：NTSC的帧速为29.97帧每秒，“rate”即为29970
+ record on
+ record off：打开、关闭视频记录。“record on”是默认设置
+ record track track_numberoff：清除“track_number”指定的视频源选择，接下来的“record”命令不会记录该视频数据
+ record track track_numberon：打开“track_number”指定的视频源选择
+ sharpness to factor：设置视频锐度
+ source to source number value：设置视频输入源。“source”可以是“rgb”“pal”“ntsc”“svideo”和“secam”。如果有大于一个的指定类型的输入源，则可选的“number value”用来确定期望的输入源
+ source to type number number：选择要记录在磁带上的视频源，“type”必须是“tuner”“line”“svideo”“aux”“generic”“mute”“rgb”
+ still algorithm algorithm：指定下一个“capture”命令使用的静态图像压缩算法。所有设备都支持“algorithm”为“none”（不进行压缩）。而且这是默认设置。在这种情况下，digital-video以BMP格式保存一副静态图像。各种设备都有各自定义好的一系列预加的压缩算法
+ still quality descriptor：指定捕捉一张静态图像时的压缩特征。所有设备都支持“low”“medium”“high”。
+ stream to number：指定工作区中回放的视频流。如果没有指定，且文件中也没有定义一个默认值，则视频驱动器物理上第一遇到的视频流会被播放
+ tint to factor：设置色调值。250意为绿色，750意为红色，0（或1000）意为蓝色，正常值是500
+ track track_number off：关闭指定磁道
+ track track_number on：打开指定磁道
+Status：返回已打开的设备的状态信息。
+ alignment：以byte形式返回数据队列
+ assemble record：如果设备设为assemble记录模式则返回TRUE
+ audio：按“setqudio”命令的“on”“off”参数执行情况返回“on”或“off”
+ audio alignment：返回与输入的waveform-audio起始处相关的数据队列
+ audio bitspersample：返回设备记录时每次取样的bit值。仅对支持“pcm”算法的设备
+ audio breaks：返回最近的AVI sequence音频中断次数
+ audio bytespersec：返回记录的每秒平均byte
+ audio input：返回近似的音频输入信号的即时级别。大于1000表示剪辑失真
+ audio monitor：返回“output”或某个有效的输入源类型
+ audio monitor number：返回“status”命令的“audio monitor”参数指定的类型的monitored-video数量
+ audio record：返回“setaudio”命令“record”参数指定的“on”或“off”
+ audio record track number：如果VCR已设为记录音频模式则返回TRUE，“number”默认为1
+ audio samplespersec：返回记录时每秒取样数量
+ audio source：返回当前音频源，可以是“left”“right”“average”“stereo”
+ audio source number：返回“status”命令“audio source”参数标明的类型的音频源数量
+ audio stream：返回当前音频流数量
+ bass：返回低音数值
+ bitsperpel：返回保存、捕捉或记录的每像素bit值
+ bitspersample：返回每次取样的bit值
+ brightness：返回当前视频亮度
+ bytespersec：返回播放或记录的每秒平均byte数量
+ cdaudio type track number：返回“number”指定的磁道的类型。可以为“audio”或“other”
+ channel：返回一个整形值，代表当前设置的频道
+ channel tuner number：如果指定“number”，则返回“number”指定的逻辑调谐器当前选定的频道，注：可以有多个逻辑调谐器
+ channels：返回频道类型，1为单声道，2 为立体声
+ clock：返回外部时间。
+ clockid：返回一个唯一的ID来标识时钟
+ color：返回视频饱和度
+ contrast：返回视频对比度
+ counter：以当前时间格式返回计数器位置
+ counter format：返回当前计数器格式
+ counter resolution：返回计数器执行方式，“frames”或“seconds”
+ current track：返回当前磁道
+ discsize：返回光盘的尺寸，8或12，单位为英寸
+ discspace drive：以当前时间格式返回近似的磁盘大小，“”格式为一个盘符，或一个盘符加一个冒号，然而有些设备可能需要完整的路径
+ division type：返回以下类型：PPQN、SMPTE 24 frame、SMPTE 25 frame、SMPTE 30 drop frame、SMPTE 30 frame
+ filecompletion：返回估计的“load”、“save”、“capture”、“cut”、“copy”、“delete”、“paste”、“undo”命令的完成度
+ fileformat：返回“record”和“save”命令使用的文件格式
+ filemode：返回“loading”、“saving”、“editing”或“idle”
+ formattag：返回格式的标签
+ forward：如果播放顺序是向前的则返回TRUE
+ framerate：返回设备默认的每秒帧数量。NTSC为30，PAL为25
+ framesskipped：当最近的AVI sequence播放时丢失的帧数量
+ gamma：返回视频的伽马值
+ index：返回当前显示的索引值
+ indexon：如果索引打开则返回TRUE
+ input：返回输入设置
+ leftvolume：返回左声道音量
+ length：以当前时间格式返回媒体长度
+ lengthtrack number：以时间或帧的形式返回指定的磁道长度
+ level：返回当前PCM音频取样值
+ master：返回有关同步设置的信息，如“midi”“none”“smpte”
+ mediapresent：返回媒体贮存物（如光盘）是否放入驱动器的信息
+ mediatype：返回媒体类型，如：“8mm”“vhs”“svhs”“beta”“Hi8”“edbeta”“CAV”“CLA”“other”
+ mode：返回设备当前模式，如：“not ready”“paused”“playing”“stopped”（以上所有设备都支持，以下部分设备支持）“open”“parked”“recording”“seeking”
+ monitor：返回当前源，为“file”或“input”
+ monitor method：返回输入方式，如：“pre”“post”“direct”
+ nominal：返回“bass”“brightness”“color”“contrast”“gamma”“sharpness”“tint”“treble”“volume”的初始值
+ nominal frame rate：返回文件预定义的帧速
+ nominal record frame rate：返回视频输入信号预定义的帧速
+ numberof audio tracks：返回媒体的音频磁道数量
+ numberof tracks：返回媒体的音频磁道数量
+ numberof video tracks：返回媒体的视频磁道数量
+ offset：返回基于SMPTE文件的偏移量
+ output：返回输出设置，这是默认值
+ pausemode：返回“recording”“playing”以表示设备正在记录、播放
+ pausetimeout：返回“pause”命令的最大延迟时间，以毫秒为单位
+ playformat：返回视频磁带回放的格式代码，如：“lp”“ep”“sp”“other”
+ playspeed：返回一个值表示实际的AVI sequence播放时间与期望的之间的比例。1000表示相同，2000表示实际时间为期望值的两倍
+ port：返回分配给sequence的MIDI端口数量
+ position：以当前时间格式返回当前位置
+ position start：返回媒体的开始位置
+ position track number：返回“number”指定的磁道的开始位置
+ postroll duration：以当前时间格式返回用以中断VCR传输的视频磁带的长度
+ poweron：如果VCR电源已打开返回TRUE
+ preroll duration：以当前时间格式返回用以隐定VCR输出的视频磁带的长度
+ ready：如果设备已准备好接收命令则返回TRUE
+ recordformat：返回视频磁带记录的格式代码，如：“lp”“ep”“sp”“other”
+ record frame rate：返回记录的帧速，单位为帧每秒再乘以1000
+ reference frame：返回指定帧之前的一个关键帧数值
+ reserved size：以当前时间格式返回工作区预留的大小
+ right volume：返回右声道音量
+ samplespersec：返回播放或记录时每秒取样数量
+ seek exactly：返回“set”命令的“seek exactly”参数设置
+ sharpness：返回当前视频锐度
+ side：返回确定媒体盘的装载情况，为1或2
+ slave：返回有关同步设置的信息，如：“file”“midi”“none”“smpte”
+ smpte：返回工作区当前位置的SMPTE时间代码
+ speed：返回设备当前速度，单位为帧每秒
+ start position：返回媒体开始位置
+ still file format：返回“capture”命令的当前文件格式
+ stretch：如果设备支持图像扩展则返回TRUE
+ tempo：以当前时间格式返回MIDI sequence的当前速度
+ time format：返回当前时间格式
+ time mode：返回当前位置时间模式，如：“detect”“timecode”“counter”
+ time type：返回当前位置使用的时间，如：“timecode”“counter”
+ timecode present：如果时间代码可以记录在磁带的当前位置则返回TRUE
+ timecode record：如果VCR被设置为记录时间代码模式则返回TRUE
+ timecode type：返回“smpte”“smpte drop”“other”“none”
+ tint：返回视频色调值
+ treble：返回当前音频高音值
+ tuner number：返回当前逻辑调谐器数量
+ unsaved：如果工作区记录了数据而又没有保存则返回TRUE
+ video：按“setvideo”的设置返回“on”或“off”
+ video key color：返回key color值
+ video key index：返回物理调色板索引
+ video monitor：返回“output”或某一输入源类型的有效类型
+ video monitor number：返回“status”命令的“video monitor”参数返回类型的源数量
+ video record：按“setvideo”命令的“record”参数的设置返回“on”或“off”
+ video record track number：如果VCR已设置为记录视频则返回TRUE，如果“track number”没给出，默认为1
+ video source：返回视频源类型
+ video source number：返回与正在使用的视频源类型相同的视频源数量
+ video stream：返回当前视频流数量
+ volume：返回左右声道的平均音量
+ window handle：返回用来播放的窗口的句柄
+ window maximized：如果窗体最大化了则返回TRUE
+ window minimized：如果窗体最小化了则返回TRUE
+ window visible：如果窗体未隐藏则返回TRUE
+ write protected：如果设备无法记录则返回TRUE，能够记录或无法侦测是否能够记录都返回FALSE
+Step：设置慢放时步进的帧数，负数即倒放，单位为帧／秒。digital-video，VCR和CAV格式videodisc支持格式。
+ by frames：设置步进的帧数量，如为负数就不能再和“reverse”一起使用
+ reverse：倒向步进
+Stop：无须多说。CD audio，digital-video，MIDI sequencer，videodisc，VCR和waveform-audio支持该命令。
+ hold：禁止释放屏幕中静态图像的资源。帧缓冲依然有效，即可以用来重画显示区。比如说：移动屏幕，窗口仍然可以重画
+ 对CD audio设备来说，该命令除了停止回放外，还将当前位置设为0。
+Undo：撤消最近一次copy、cut、delete和paste命令。digital-video支持该命令。
+Unfreeze：Freeze的反操作。digital-video，VCR和video-overlwy支持该命令。
+ at rectangle：指定重新激活的视频区域。rectangle的格式为X1 Y1 X2 Y2。X1 Y1为左上角坐标，X2 Y2指定宽度和长度
+ input：激活输入图像
+ output：激活输出图像。这是默认设置
+Update：读取当前帧的数据，并显示在目标窗口或目标DC（设备场景）。digital-video支持该命令。
+ hdc hdc：指要更新的DC句柄
+ hdc hdc at rect：指定要更新的目的DC的区域
+ paint hdc hdc：当程序收到一个WM_PAINT消息时更新DC
+ rect的格式为X1 Y1 X2 Y2。X1 Y1为左上角坐标，X2 Y2指定宽度和长度
+Where：获得Put命令指定的源或目标显示区域。digital-video和video-overlay
+ destination：返回目的区域长度和宽度
+ destination max：返回当前客户矩形的大小
+ frame：返回帧缓冲的区域大小
+ frame max：返回帧缓冲的最大值
+ source：返回源的区域大小
+ source max：返回帧缓冲的最大值（与frame max相似）
+ video：返回将要捕捉的视频图像的区域大小
+ video max：返回将要捕捉的视频图像的区域的最大值
+ window：返回播放窗口的当前大小和位置
+ window max：返回整个播放窗口的大小
+Window：设置播放的窗口。可以用它把播放窗口设置为其它窗口，取消默认的窗口。digital-video和video-overlay支持该命令。
+ fixed：禁止图像扩展（伸缩）
+ handle default：指定设备使用“open”命令执行时设置的默认窗口
+ handle hwnd：指定使用“”指定的窗口来显示视频图像，可以让两个设备同时使用一个窗口显示图像，在此情况下各个设备各自刷新窗口，好像其它设备并不存在。
+ show maximized：最大化目的窗口
+ show min noactive：以图标状态显示一窗口
+ show minimized：最小化目的窗口
+ show na：以当前状态显示目的窗口，具有焦点的窗口不改变其焦点
+ show noactivate：以最近使用过的大小和位置显示目的窗口，具有焦点的窗口不改变其焦点
+ show normal：以窗口原大小和位置显示并激活（与“state restore”相同）
+ state hide：隐藏目的窗口
+ state iconic：以图标状态显示一窗口
+ state maximized：最大化目的窗口
+ state minimized：最小化目的窗口，并在窗口队列中激活顶层窗口
+ state no action：以目的窗口当前状态显示它
+ state no activate：以最近使用过的状态显示目的窗口，具有焦点的窗口不改变其焦点
+ state normal：以目的窗口原来大小和位置显示并激活
+ state restore：以目的窗口原来大小和位置显示并激活
+ state show：显示目的窗口
+ stretch：允许图像扩展（伸缩）
+ text caption：指定目的窗口的标题

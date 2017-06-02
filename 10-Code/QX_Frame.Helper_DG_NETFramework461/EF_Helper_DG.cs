@@ -74,7 +74,7 @@ namespace QX_Frame.Helper_DG
         {
             if (QX_Frame_Helper_DG_Config.Cache_IsCache)
             {
-                Cache_Helper_DG.Cache_Delete(nameof(T));
+                Cache_Helper_DG.Cache_Delete($"{nameof(Db)}_{nameof(T)}");
             }
         }
 
@@ -87,12 +87,12 @@ namespace QX_Frame.Helper_DG
         {
             if (QX_Frame_Helper_DG_Config.Cache_IsCache)
             {
-                IQueryable<T> iqueryable = Cache_Helper_DG.Cache_Get(nameof(T)) as IQueryable<T>;
+                IQueryable<T> iqueryable = Cache_Helper_DG.Cache_Get($"{nameof(Db)}_{nameof(T)}") as IQueryable<T>;
                 if (iqueryable == null)
                 {
                     DbContext db = GetCurrentDbContext();
                     iqueryable = db.Set<T>().AsExpandable();
-                    Cache_Helper_DG.Cache_Add(nameof(T), iqueryable, null, DateTime.Now.AddMinutes(QX_Frame_Helper_DG_Config.Cache_CacheExpirationTime_Minutes), TimeSpan.Zero);
+                    Cache_Helper_DG.Cache_Add($"{nameof(Db)}_{nameof(T)}", iqueryable,QX_Frame_Helper_DG_Config.Cache_CacheExpirationTime_Minutes);
                 }
                 return iqueryable;
             }
@@ -207,27 +207,27 @@ namespace QX_Frame.Helper_DG
         {
             return GetIQuerybleByCache<T>().Where(selectWhere).FirstOrDefault<T>() == null ? false : true;
         }
-        public static T selectSingle<T>(Expression<Func<T, Boolean>> selectWhere) where T : class
+        public static T SelectSingle<T>(Expression<Func<T, Boolean>> selectWhere) where T : class
         {
             return GetIQuerybleByCache<T>().Where(selectWhere).FirstOrDefault<T>();
         }
-        public static IQueryable<T> selectAll<T>() where T : class
+        public static IQueryable<T>SelectAll<T>() where T : class
         {
             return GetIQuerybleByCache<T>();
         }
-        public static IQueryable<T> selectAll<T>(out int Count) where T : class
+        public static IQueryable<T>SelectAll<T>(out int Count) where T : class
         {
             Count = GetIQuerybleByCache<T>().Count();
             return GetIQuerybleByCache<T>();
         }
-        public static IQueryable<T> selectAll<T, TKey>(Expression<Func<T, TKey>> orderBy, Boolean isDESC = false) where T : class
+        public static IQueryable<T>SelectAll<T, TKey>(Expression<Func<T, TKey>> orderBy, Boolean isDESC = false) where T : class
         {
             if (isDESC)
                 return GetIQuerybleByCache<T>().OrderByDescending(orderBy);
             else
                 return GetIQuerybleByCache<T>().OrderBy(orderBy);
         }
-        public static IQueryable<T> selectAll<T, TKey>(Expression<Func<T, TKey>> orderBy, out int Count, Boolean isDESC = false) where T : class
+        public static IQueryable<T>SelectAll<T, TKey>(Expression<Func<T, TKey>> orderBy, out int Count, Boolean isDESC = false) where T : class
         {
             Count = GetIQuerybleByCache<T>().Count();
             if (isDESC)
@@ -235,24 +235,24 @@ namespace QX_Frame.Helper_DG
             else
                 return GetIQuerybleByCache<T>().OrderBy(orderBy);
         }
-        public static IQueryable<T> selectAll<T>(Expression<Func<T, Boolean>> selectWhere) where T : class
+        public static IQueryable<T>SelectAll<T>(Expression<Func<T, Boolean>> selectWhere) where T : class
         {
             return GetIQuerybleByCache<T>().Where(selectWhere);
         }
-        public static IQueryable<T> selectAll<T>(Expression<Func<T, Boolean>> selectWhere, out int Count) where T : class
+        public static IQueryable<T>SelectAll<T>(Expression<Func<T, Boolean>> selectWhere, out int Count) where T : class
         {
             var IQueryable = GetIQuerybleByCache<T>().Where(selectWhere);
             Count = IQueryable.Count();
             return IQueryable;
         }
-        public static IQueryable<T> selectAll<T, TKey>(Expression<Func<T, TKey>> orderBy, Expression<Func<T, Boolean>> selectWhere, Boolean isDESC = false) where T : class
+        public static IQueryable<T>SelectAll<T, TKey>(Expression<Func<T, TKey>> orderBy, Expression<Func<T, Boolean>> selectWhere, Boolean isDESC = false) where T : class
         {
             if (isDESC)
                 return GetIQuerybleByCache<T>().Where(selectWhere).OrderByDescending(orderBy);
             else
                 return GetIQuerybleByCache<T>().Where(selectWhere).OrderBy(orderBy);
         }
-        public static IQueryable<T> selectAll<T, TKey>(Expression<Func<T, TKey>> orderBy, Expression<Func<T, Boolean>> selectWhere, out int Count, Boolean isDESC = false) where T : class
+        public static IQueryable<T>SelectAll<T, TKey>(Expression<Func<T, TKey>> orderBy, Expression<Func<T, Boolean>> selectWhere, out int Count, Boolean isDESC = false) where T : class
         {
             var IQueryable = GetIQuerybleByCache<T>().Where(selectWhere);
             Count = IQueryable.Count();
@@ -262,7 +262,7 @@ namespace QX_Frame.Helper_DG
                 return IQueryable.OrderBy(orderBy);
         }
 
-        public static IQueryable<T> selectAllPaging<T, TKey>(int pageIndex, int pageSize, Expression<Func<T, TKey>> orderBy, Boolean isDESC = false) where T : class
+        public static IQueryable<T>SelectAllPaging<T, TKey>(int pageIndex, int pageSize, Expression<Func<T, TKey>> orderBy, Boolean isDESC = false) where T : class
         {
             var IQueryable = GetIQuerybleByCache<T>();
             if (isDESC)
@@ -270,7 +270,7 @@ namespace QX_Frame.Helper_DG
             else
                 return IQueryable.OrderBy(orderBy).Skip((pageIndex - 1 < 0 ? 0 : pageIndex - 1) * (pageSize < 0 ? 0 : pageSize)).Take(pageSize < 0 ? 0 : pageSize);
         }
-        public static IQueryable<T> selectAllPaging<T, TKey>(int pageIndex, int pageSize, Expression<Func<T, TKey>> orderBy, out int Count, Boolean isDESC = false) where T : class
+        public static IQueryable<T>SelectAllPaging<T, TKey>(int pageIndex, int pageSize, Expression<Func<T, TKey>> orderBy, out int Count, Boolean isDESC = false) where T : class
         {
             var IQueryable = GetIQuerybleByCache<T>();
             Count = IQueryable.Count();
@@ -279,7 +279,7 @@ namespace QX_Frame.Helper_DG
             else
                 return IQueryable.OrderBy(orderBy).Skip((pageIndex - 1 < 0 ? 0 : pageIndex - 1) * (pageSize < 0 ? 0 : pageSize)).Take(pageSize < 0 ? 0 : pageSize);
         }
-        public static IQueryable<T> selectAllPaging<T, TKey>(int pageIndex, int pageSize, Expression<Func<T, TKey>> orderBy, Expression<Func<T, Boolean>> selectWhere, Boolean isDESC = false) where T : class
+        public static IQueryable<T>SelectAllPaging<T, TKey>(int pageIndex, int pageSize, Expression<Func<T, TKey>> orderBy, Expression<Func<T, Boolean>> selectWhere, Boolean isDESC = false) where T : class
         {
             var IQueryable = GetIQuerybleByCache<T>().Where(selectWhere);
             if (isDESC)
@@ -287,7 +287,7 @@ namespace QX_Frame.Helper_DG
             else
                 return IQueryable.OrderBy(orderBy).Skip((pageIndex - 1 < 0 ? 0 : pageIndex - 1) * (pageSize < 0 ? 0 : pageSize)).Take(pageSize < 0 ? 0 : pageSize);
         }
-        public static IQueryable<T> selectAllPaging<T, TKey>(int pageIndex, int pageSize, Expression<Func<T, TKey>> orderBy, Expression<Func<T, Boolean>> selectWhere, out int Count, Boolean isDESC = false) where T : class
+        public static IQueryable<T>SelectAllPaging<T, TKey>(int pageIndex, int pageSize, Expression<Func<T, TKey>> orderBy, Expression<Func<T, Boolean>> selectWhere, out int Count, Boolean isDESC = false) where T : class
         {
             var IQueryable = GetIQuerybleByCache<T>().Where(selectWhere);
             Count = IQueryable.Count();
