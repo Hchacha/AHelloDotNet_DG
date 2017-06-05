@@ -11,7 +11,7 @@ namespace QX_Frame.Helper_DG.Extends
 {
     public static class CloneExtends
     {
-        public static T DeepCloneModel<T>(this T t) where T : class
+        public static T DeepCloneObject<T>(this T t) where T : class
         {
             T model = System.Activator.CreateInstance<T>();                     //实例化一个T类型对象
             PropertyInfo[] propertyInfos = model.GetType().GetProperties();     //获取T对象的所有公共属性

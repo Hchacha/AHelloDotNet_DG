@@ -22,5 +22,9 @@ namespace QX_Frame.Helper_DG
         {
             ThreadPool.QueueUserWorkItem(obj => { action(); });
         }
+        public static void ThreadPoolRun<T>(Action<T> action, T t)
+        {
+            ThreadPool.QueueUserWorkItem(obj => action(t));
+        }
     }
 }

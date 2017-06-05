@@ -45,8 +45,8 @@ namespace QX_Frame.Helper_DG
         /// </summary>
         public struct RSA_Keys
         {
-            public string publicKey { get; set; }
-            public string privateKey { get; set; }
+            public string PublicKey { get; set; }
+            public string PrivateKey { get; set; }
         }
         /// <summary>
         /// RSA_GetKeys
@@ -58,8 +58,8 @@ namespace QX_Frame.Helper_DG
             RSAParameters parameter = rsaProvider.ExportParameters(true);
             return new RSA_Keys()
             {
-                publicKey = rsaProvider.ToXmlString(false),//BytesToHexString(parameter.Exponent) + "," + BytesToHexString(parameter.Modulus),
-                privateKey = rsaProvider.ToXmlString(true)
+                PublicKey = rsaProvider.ToXmlString(false),//BytesToHexString(parameter.Exponent) + "," + BytesToHexString(parameter.Modulus),
+                PrivateKey = rsaProvider.ToXmlString(true)
             };
         }
 
