@@ -10,17 +10,20 @@ namespace Test.ConsoleApp1.NETFramework461
 {
     class Program
     {
+
         static void Main(string[] args)
         {
-            var client = Redis_Helper_DG.Client;
+            new ConfigBootStrap();//BootStrap
+
+            //---------
 
             
-            var values =client.GetAllKeys();
 
-            foreach (var item in values)
-            {
-                Console.WriteLine(item+"\t"+Redis_Helper_DG.Client.Get<string>(item).ToString());
-            }
+
+
+
+
+            //---------
 
             Console.WriteLine("any key to exit ...");
             Console.ReadKey();

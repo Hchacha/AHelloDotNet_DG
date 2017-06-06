@@ -94,12 +94,14 @@
     <Compile Include="Extends\Exception_DG.cs" />
     <Compile Include="Extends\ToTypesExtends.cs" />
     <Compile Include="File_Helper_DG.cs" />
+    <Compile Include="HttpRuntimeCache_Helper_DG.cs" />
     <Compile Include="IO_Helper_DG.cs" />
     <Compile Include="Ip_Helper_DG.cs" />
     <Compile Include="ListPaging_Helper_DG.cs" />
     <Compile Include="Log_Helper_DG.cs" />
     <Compile Include="Mail_Helper_DG.cs" />
     <Compile Include="Office_Helper_DG.cs" />
+    <Compile Include="Options\Opt_CacheServer.cs" />
     <Compile Include="PredicateBuilder_Helper_DG.cs" />
     <Compile Include="ProcessFlow_Helper_DG.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -112,9 +114,7 @@
     <Compile Include="Transaction_Helper_DG.cs" />
     <Compile Include="TypeConvert_Helper_DG.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Options\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />

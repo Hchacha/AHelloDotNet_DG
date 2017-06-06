@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ServiceStack.Redis;
+using QX_Frame.Helper_DG.Configs;
 
 /**
  * author:qixiao
@@ -13,14 +14,6 @@ namespace QX_Frame.Helper_DG
 {
     public class Redis_Helper_DG
     {
-        /// <summary>
-        /// Host
-        /// </summary>
-        public static string Host { get; set; } = "127.0.0.1";
-        /// <summary>
-        /// Port
-        /// </summary>
-        public static int Port { get; set; } = 6379;
         /// <summary>
         /// client
         /// </summary>
@@ -37,7 +30,7 @@ namespace QX_Frame.Helper_DG
                 lock (lockHelper)
                 {
                     if (client == null)
-                        client = new RedisClient(Host, Port);
+                        client = new RedisClient(QX_Frame_Helper_DG_Config.Cache_Redis_Host, QX_Frame_Helper_DG_Config.Cache_Redis_Port);
                 }
             }
         }
