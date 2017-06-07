@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("FaceRecognition.NETFramework461")]
+[assembly: AssemblyTitle("Image.NetFramework461")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("FaceRecognition.NETFramework461")]
+[assembly: AssemblyProduct("Image.NetFramework461")]
 [assembly: AssemblyCopyright("Copyright © Microsoft 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("7791f89d-0777-451c-b1b8-18f475cdfaf2")]
+[assembly: Guid("e30ee108-d6fd-48c7-8748-7a141c667ca8")]
 
 // Version information for an assembly consists of the following four values:
 //

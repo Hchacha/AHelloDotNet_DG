@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace FaceRecognition
+namespace Image.NetFramework461
 {
     public partial class Form1 : Form
     {

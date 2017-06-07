@@ -21,11 +21,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity3D.NETFramework461", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormAppMapOperation.NETFramework461", "FormAppMapOperation.NETFramework461\FormAppMapOperation.NETFramework461.csproj", "{B8420BF4-537F-4A1E-88DE-2E87C73E24BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FaceRecognition.NETFramework461", "FaceRecognition.NETFramework461\FaceRecognition.NETFramework461.csproj", "{7791F89D-0777-451C-B1B8-18F475CDFAF2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormAppWebKitBrowser.NETFramework461", "FormAppWebKitBrowser.NETFramework461\FormAppWebKitBrowser.NETFramework461.csproj", "{69A371F7-F5A3-4A08-99E3-788F214434BF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaPlay.NETFramework461", "MediaPlay.NETFramework461\MediaPlay.NETFramework461.csproj", "{04770880-8DCF-455F-B3A6-5C4163C7978C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.FormsApp.NETFramework461", "Test.FormsApp.NETFramework461\Test.FormsApp.NETFramework461.csproj", "{80F8E02A-70A1-49C4-A865-7B627613B65A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Image.NetFramework461", "Image.NetFramework461\Image.NetFramework461.csproj", "{E30EE108-D6FD-48C7-8748-7A141C667CA8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,10 +71,6 @@ Global
 		{B8420BF4-537F-4A1E-88DE-2E87C73E24BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8420BF4-537F-4A1E-88DE-2E87C73E24BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8420BF4-537F-4A1E-88DE-2E87C73E24BF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7791F89D-0777-451C-B1B8-18F475CDFAF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7791F89D-0777-451C-B1B8-18F475CDFAF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7791F89D-0777-451C-B1B8-18F475CDFAF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7791F89D-0777-451C-B1B8-18F475CDFAF2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{69A371F7-F5A3-4A08-99E3-788F214434BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{69A371F7-F5A3-4A08-99E3-788F214434BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69A371F7-F5A3-4A08-99E3-788F214434BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -81,6 +79,14 @@ Global
 		{04770880-8DCF-455F-B3A6-5C4163C7978C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04770880-8DCF-455F-B3A6-5C4163C7978C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04770880-8DCF-455F-B3A6-5C4163C7978C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80F8E02A-70A1-49C4-A865-7B627613B65A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80F8E02A-70A1-49C4-A865-7B627613B65A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80F8E02A-70A1-49C4-A865-7B627613B65A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80F8E02A-70A1-49C4-A865-7B627613B65A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E30EE108-D6FD-48C7-8748-7A141C667CA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E30EE108-D6FD-48C7-8748-7A141C667CA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E30EE108-D6FD-48C7-8748-7A141C667CA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E30EE108-D6FD-48C7-8748-7A141C667CA8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace FaceRecognition.NETFramework461
+namespace Test.FormsApp.NETFramework461
 {
     static class Program
     {
