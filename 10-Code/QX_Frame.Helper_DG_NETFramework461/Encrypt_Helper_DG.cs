@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Security.Cryptography;
-using System.Web.Security;
 using System.IO;
+using System.Security.Cryptography;
+using System.Text;
+using System.Web.Security;
 
 namespace QX_Frame.Helper_DG
 {
@@ -36,6 +33,16 @@ namespace QX_Frame.Helper_DG
         #endregion
 
         #region RSA Encrypt
+
+        /**
+         * RSA 加密解密签名算法简介：
+         * RSA公钥-> 1：用于加密数据，然后用私钥解密；2：用于得到数据的Hash码并且配合私钥签名进行签名验证；
+         * RSA私钥-> 1：用于解密公钥加密后的密文；2：用于对数据Hash签名
+         * 使用场景：甲，乙二人，甲执公钥，乙执私钥
+         * 甲向乙发送内容，并用公钥加密，只能由乙使用私钥解密查看，其他持有公钥的无法解密；
+         * 乙向甲发送内容，先用内容的Hash进行签名，然后将内容和签名一起发给甲，甲判断是否内容被篡改，Hash内容然后使用Hash内容、签名、公钥对签名进行验证，通过则未被篡改
+         * */
+
         /// <summary>
         /// RSA的容器 可以解密的源字符串长度为 DWKEYSIZE/8-11 
         /// </summary>
@@ -145,5 +152,80 @@ namespace QX_Frame.Helper_DG
         #endregion
 
         #endregion END RSA Encrypt
+
+        #region 3DES Encrypt
+        //构造一个对称算法
+        private static SymmetricAlgorithm mCSP = new TripleDESCryptoServiceProvider();
+        /// <summary>
+        /// 字符串的加密
+        /// </summary>
+        /// <param name="Content">要加密的字符串</param>
+        /// <param name="sKey">密钥，必须24位</param>
+        /// <param name="sIV_12bit">向量，必须是8个字符</param>
+        /// <returns>加密后的字符串</returns>
+        public static string DES3_Encrypt(string Content, string sKey_24bit, string sIV_8bit)
+        {
+            try
+            {
+                ICryptoTransform ct;
+                MemoryStream ms;
+                CryptoStream cs;
+                byte[] byt;
+                mCSP.Key = Encoding.UTF8.GetBytes(sKey_24bit);
+                mCSP.IV = Encoding.UTF8.GetBytes(sIV_8bit);
+                //指定加密的运算模式
+                mCSP.Mode = System.Security.Cryptography.CipherMode.ECB;
+                //获取或设置加密算法的填充模式
+                mCSP.Padding = System.Security.Cryptography.PaddingMode.PKCS7;
+                ct = mCSP.CreateEncryptor(mCSP.Key, mCSP.IV);//创建加密对象
+                byt = Encoding.UTF8.GetBytes(Content);
+                ms = new MemoryStream();
+                cs = new CryptoStream(ms, ct, CryptoStreamMode.Write);
+                cs.Write(byt, 0, byt.Length);
+                cs.FlushFinalBlock();
+                cs.Close();
+                return Convert.ToBase64String(ms.ToArray());
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        /// <summary>
+        /// 解密字符串
+        /// </summary>
+        /// <param name="encryptedContent">加密后的字符串</param>
+        /// <param name="sKey">密钥，必须24位</param>
+        /// <param name="sIV_12bit">向量，必须是8个字符</param>
+        /// <returns>解密后的字符串</returns>
+        public static string DES3_Decrypt(string encryptedContent, string sKey_24bit, string sIV_8bit)
+        {
+            try
+            {
+                ICryptoTransform ct;//加密转换运算
+                MemoryStream ms;//内存流
+                CryptoStream cs;//数据流连接到数据加密转换的流
+                byte[] byt;
+                //将3DES的密钥转换成byte
+                mCSP.Key = Encoding.UTF8.GetBytes(sKey_24bit);
+                //将3DES的向量转换成byte
+                mCSP.IV = Encoding.UTF8.GetBytes(sIV_8bit);
+                mCSP.Mode = System.Security.Cryptography.CipherMode.ECB;
+                mCSP.Padding = System.Security.Cryptography.PaddingMode.PKCS7;
+                ct = mCSP.CreateDecryptor(mCSP.Key, mCSP.IV);//创建对称解密对象
+                byt = Convert.FromBase64String(encryptedContent);
+                ms = new MemoryStream();
+                cs = new CryptoStream(ms, ct, CryptoStreamMode.Write);
+                cs.Write(byt, 0, byt.Length);
+                cs.FlushFinalBlock();
+                cs.Close();
+                return Encoding.UTF8.GetString(ms.ToArray());
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
     }
 }

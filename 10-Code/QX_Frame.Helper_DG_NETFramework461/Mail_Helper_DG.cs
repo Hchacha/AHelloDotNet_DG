@@ -13,6 +13,22 @@ namespace QX_Frame.Helper_DG
 {
     public class Mail_Helper_DG
     {
+        /// <summary>
+        /// SendBySMTP
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="password"></param>
+        /// <param name="toMailAddress"></param>
+        /// <param name="ccMailAddress"></param>
+        /// <param name="fromMailAddress"></param>
+        /// <param name="fromMailName"></param>
+        /// <param name="mailSubject"></param>
+        /// <param name="mailBody"></param>
+        /// <param name="isBodyHtml"></param>
+        /// <param name="smtpHost"></param>
+        /// <param name="smtpPort"></param>
+        /// <param name="mailPriority">邮件等级</param>
+        /// <returns></returns>
         public static bool SendBySMTP(string account, string password, string[] toMailAddress, string[] ccMailAddress, string fromMailAddress, string fromMailName, string mailSubject, string mailBody, bool isBodyHtml, string smtpHost = "smtp.163.com", int smtpPort = 25, MailPriority mailPriority = MailPriority.Normal)
         {
             System.Net.Mail.MailMessage msg = new System.Net.Mail.MailMessage();
