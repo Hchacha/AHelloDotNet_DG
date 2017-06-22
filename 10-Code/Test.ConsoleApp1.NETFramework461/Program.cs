@@ -17,18 +17,23 @@ namespace Test.ConsoleApp1.NETFramework461
 
             //---------
 
-            string content = "123";
-            string sIV = "33111111";
-            string key = Encrypt_Helper_DG.MD5_Encrypt("123").Substring(0,24);
+            //string content = "123";
+            //string sIV = "33111111";
+            //string key = Encrypt_Helper_DG.MD5_Encrypt("123").Substring(0,24);
 
-            string encString = Encrypt_Helper_DG.DES3_Encrypt(content, key, sIV);
+            //string encString = Encrypt_Helper_DG.DES3_Encrypt(content, key, sIV);
 
-            Console.WriteLine(encString);
+            //Console.WriteLine(encString);
 
-            Console.WriteLine("\n------------");
+            //Console.WriteLine("\n------------");
 
-            Console.WriteLine(Encrypt_Helper_DG.DES3_Decrypt(encString, key, sIV));
+            //Console.WriteLine(Encrypt_Helper_DG.DES3_Decrypt(encString, key, sIV));
 
+            string source = "123456eeasdasdas";
+            string encodeString = Encrypt_Helper_DG.Base64_Encode(source);
+            string decodeString = Encrypt_Helper_DG.Base64_Decode(encodeString);
+            Console.WriteLine(encodeString);
+            Console.WriteLine(decodeString);
 
 
 

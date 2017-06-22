@@ -227,5 +227,19 @@ namespace QX_Frame.Helper_DG
             }
         }
         #endregion
+
+        #region Base64 Encode
+        public static string Base64_Encode(string content)
+        {
+            byte[] inArray = System.Text.Encoding.UTF8.GetBytes(content);
+            return Convert.ToBase64String(inArray);
+        }
+
+        public static string Base64_Decode(string content)
+        {
+            byte[] inArray = Convert.FromBase64String(content);
+            return System.Text.Encoding.UTF8.GetString(inArray);
+        }
+        #endregion
     }
 }

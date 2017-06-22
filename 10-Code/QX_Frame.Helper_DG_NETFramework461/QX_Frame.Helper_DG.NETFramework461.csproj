@@ -87,6 +87,7 @@
     <Compile Include="Code_Helper_DG.cs" />
     <Compile Include="Configs\QX_Frame_Helper_DG_Config.cs" />
     <Compile Include="Convert_Helper_DG.cs" />
+    <Compile Include="Cookie_Helper_DG.cs" />
     <Compile Include="DateTime_Helper_DG.cs" />
     <Compile Include="EF_Helper_DG.cs" />
     <Compile Include="Encrypt_Helper_DG.cs" />

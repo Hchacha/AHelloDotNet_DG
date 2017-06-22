@@ -66,7 +66,7 @@ namespace QX_Frame.Helper_DG.Extends
         {
             if (string.IsNullOrEmpty(QX_Frame_Helper_DG_Config.International_ConfigFileLocation))
             {
-                throw new Exception_DG("QX_Frame_Helper_DG_Config.International_ConfigFileLocation must be provide correctly ! -- QX_Frame.Helper_DG.Extends.Exception_DG line:18");
+                throw new Exception_DG("QX_Frame_Helper_DG_Config.International_ConfigFileLocation must be provide correctly ! -- QX_Frame.Helper_DG.Extends.Exception_DG line:69");
             }
             JObject jobject = File_Helper_DG.Json_GetJObjectFromJsonFile(QX_Frame_Helper_DG_Config.International_ConfigFileLocation);//get json configuration file
             this.Message_DG = jobject[QX_Frame_Helper_DG_Config.International_Language][$"ERROR_{errorCode}"].ToString();
