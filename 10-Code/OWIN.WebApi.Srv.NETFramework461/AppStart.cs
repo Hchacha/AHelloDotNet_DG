@@ -5,6 +5,7 @@ using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using QX_Frame.App.WebApi.Extends;
 using System.Web.Http.Cors;
+using Microsoft.Owin.Cors;
 
 namespace OWIN.WebApi.Srv
 {
@@ -36,6 +37,8 @@ namespace OWIN.WebApi.Srv
     {
         public void Configuration(IAppBuilder appBuilder)
         {
+            //appBuilder.UseCors(CorsOptions.AllowAll);
+            appBuilder.MapSignalR();
             HttpConfiguration config = new HttpConfiguration();
 
             // Web API configuration and services
